@@ -27,7 +27,7 @@ export async function get_user(ctx: BaseContext) {
 
 export async function create_user(ctx: BaseContext) {
   const user_repository = getManager().getRepository(User);
-  const user_to_save = new User({ ...ctx.request.body }); // clone in case anything is mutated
+  const user_to_save = new User({ ...ctx.request.body });
 
   const user = await user_repository.save(user_to_save);
 

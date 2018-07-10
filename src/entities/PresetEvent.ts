@@ -12,6 +12,8 @@ interface PresetEventFields {
 @Entity()
 @Unique(['name'])
 export default class PresetEvent implements PresetEventFields {
+  [key: string]: any;
+
   @PrimaryGeneratedColumn() public id: number;
   @Column() public holds_clock: boolean = false;
   @Column('text') public message: string = '';

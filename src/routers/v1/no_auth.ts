@@ -18,9 +18,14 @@ router.post('/user', controller.user.create_user);
 router.patch('/user/:id', controller.user.update_user);
 router.delete('/user/:id', controller.user.delete_user);
 
+router.get('/preset_event', controller.preset_event.get_all_preset_events);
+router.get('/preset_event/:id', controller.preset_event.get_preset_event);
+router.post('/preset_event', controller.preset_event.create_preset_event);
+router.patch('/preset_event/:id', controller.preset_event.update_preset_event);
+router.delete('/preset_event/:id', controller.preset_event.delete_preset_event);
+
 [
   'event',
-  'preset_event',
   'section',
   'thread',
 ].forEach(type => {
