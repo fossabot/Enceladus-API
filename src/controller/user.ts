@@ -3,7 +3,7 @@ import User from '../entities/User';
 import { BaseContext } from './helpers/BaseContext';
 import STATUS from './helpers/status_codes';
 
-export async function get_all_users(ctx: BaseContext) {
+export async function get_all(ctx: BaseContext) {
   const user_repository = getManager().getRepository(User);
   const users = await user_repository.find();
 
@@ -11,7 +11,7 @@ export async function get_all_users(ctx: BaseContext) {
   ctx.body = users;
 }
 
-export async function get_user(ctx: BaseContext) {
+export async function get(ctx: BaseContext) {
   const user_repository = getManager().getRepository(User);
   const user = await user_repository.findOne(ctx.query.id);
 
@@ -25,7 +25,7 @@ export async function get_user(ctx: BaseContext) {
   ctx.body = user;
 }
 
-export async function create_user(ctx: BaseContext) {
+export async function create(ctx: BaseContext) {
   const user_repository = getManager().getRepository(User);
   const user_to_save = new User({ ...ctx.request.body });
 
@@ -40,7 +40,7 @@ export async function create_user(ctx: BaseContext) {
   }
 }
 
-export async function update_user(ctx: BaseContext) {
+export async function update(ctx: BaseContext) {
   const user_repository = getManager().getRepository(User);
 
   if (ctx.params.id === undefined) {
@@ -74,7 +74,7 @@ export async function update_user(ctx: BaseContext) {
   ctx.body = user;
 }
 
-export async function delete_user(ctx: BaseContext) {
+export async function remove(ctx: BaseContext) {
   const user_repository = getManager().getRepository(User);
   const user_to_delete = await user_repository.findOne(ctx.params.id);
 

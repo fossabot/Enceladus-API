@@ -3,7 +3,7 @@ import PresetEvent from '../entities/PresetEvent';
 import { BaseContext } from './helpers/BaseContext';
 import STATUS from './helpers/status_codes';
 
-export async function get_all_preset_events(ctx: BaseContext) {
+export async function get_all(ctx: BaseContext) {
   const preset_event_repository = getManager().getRepository(PresetEvent);
   const preset_events = await preset_event_repository.find();
 
@@ -11,7 +11,7 @@ export async function get_all_preset_events(ctx: BaseContext) {
   ctx.body = preset_events;
 }
 
-export async function get_preset_event(ctx: BaseContext) {
+export async function get(ctx: BaseContext) {
   const preset_event_repository = getManager().getRepository(PresetEvent);
   const preset_event = await preset_event_repository.findOne(ctx.query.id);
 
@@ -25,7 +25,7 @@ export async function get_preset_event(ctx: BaseContext) {
   ctx.body = preset_event;
 }
 
-export async function create_preset_event(ctx: BaseContext) {
+export async function create(ctx: BaseContext) {
   const preset_event_repository = getManager().getRepository(PresetEvent);
   const preset_event_to_save = new PresetEvent({ ...ctx.request.body });
 
@@ -40,7 +40,7 @@ export async function create_preset_event(ctx: BaseContext) {
   }
 }
 
-export async function update_preset_event(ctx: BaseContext) {
+export async function update(ctx: BaseContext) {
   const preset_event_repository = getManager().getRepository(PresetEvent);
 
   if (ctx.params.id === undefined) {
@@ -73,7 +73,7 @@ export async function update_preset_event(ctx: BaseContext) {
   ctx.body = preset_event;
 }
 
-export async function delete_preset_event(ctx: BaseContext) {
+export async function remove(ctx: BaseContext) {
   const preset_event_repository = getManager().getRepository(PresetEvent);
   const preset_event_to_delete = await preset_event_repository.findOne(ctx.params.id);
 
