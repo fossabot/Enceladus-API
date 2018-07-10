@@ -1,0 +1,45 @@
+{
+  "name": "straz-api",
+  "version": "0.1.0",
+  "description": "Stráž launch thread API",
+  "main": "dist/index.js",
+  "repository": "https://github.com/r-spacex/straz-api",
+  "author": "Jacob Pratt <the.z.cuber@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "lint": "tslint src/*.ts src/**/*.ts",
+    "fmt": "tslint src/*.ts src/**/*.ts --fix",
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@koa/cors": "^2.2.1",
+    "dotenv": "^6.0.0",
+    "koa": "^2.5.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-helmet": "^4.0.0",
+    "koa-jwt": "^3.3.2",
+    "koa-router": "^7.4.0",
+    "koa-socket": "^4.4.0",
+    "pg": "^7.4.3",
+    "reflect-metadata": "^0.1.12",
+    "socket.io": "^2.1.1",
+    "typeorm": "^0.2.7",
+    "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^4.0.3",
+    "@types/koa": "^2.0.46",
+    "@types/koa-bodyparser": "^5.0.0",
+    "@types/koa-helmet": "^3.1.2",
+    "@types/koa-router": "^7.0.30",
+    "@types/koa__cors": "^2.2.2",
+    "@types/node": "^10.5.2",
+    "@types/socket.io": "^1.4.36",
+    "@types/winston": "^2.3.9",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2"
+  }
+}

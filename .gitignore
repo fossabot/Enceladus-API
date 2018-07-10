@@ -1,0 +1,6 @@
+.env
+.vscode/
+*.swp
+dist/
+node_modules/
+yarn-error.log

@@ -1,0 +1,60 @@
+# Stráž API
+
+![License](https://img.shields.io/github/license/r-spacex/straz-api.svg?style=flat-square)
+![Version](https://img.shields.io/github/package-json/v/r-spacex/straz-api.svg?style=flat-square)
+
+## Endpoints
+
+**NB**:
+Authentication has not yet been implemented,
+primarily as a means for faster testing.
+It should not be difficult to implement;
+placing individual routes below (to be created) middleware should suffice.
+
+### Version 1
+
+_Version 1 is in progress,
+and may change at any time without warning._
+
+| Method   | Endpoint            | Expected status code | Minimum authentication | Allowed body parameters                                                                                                           |
+| -------- | ------------------- | -------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`    | `/user`             | 200 OK               | Global admin           | _none_                                                                                                                            |
+| `GET`    | `/user/:id`         | 200 OK               | Global admin           | _none_                                                                                                                            |
+| `POST`   | `/user`             | 201 CREATED          | Global admin           | `reddit_username`\*<br>`auth_token`\*<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member` |
+| `PATCH`  | `/user/:id`         | 200 OK               | Global admin           | `is_global_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member`                                                                |
+| `DELETE` | `/user/:id`         | 204 NO CONTENT       | Global admin           | _none_                                                                                                                            |
+|          |
+| `GET`    | `/event`            | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `GET`    | `/event/:id`        | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `POST`   | `/event`            | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `PATCH`  | `/event/:id`        | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `DELETE` | `/event/:id`        | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+|          |
+| `GET`    | `/preset_event`     | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `GET`    | `/preset_event/:id` | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `POST`   | `/preset_event`     | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `PATCH`  | `/preset_event/:id` | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `DELETE` | `/preset_event/:id` | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+|          |
+| `GET`    | `/section`          | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `GET`    | `/section/:id`      | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `POST`   | `/section`          | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `PATCH`  | `/section/:id`      | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `DELETE` | `/section/:id`      | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+|          |
+| `GET`    | `/thread`           | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `GET`    | `/thread/:id`       | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `POST`   | `/thread`           | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `PATCH`  | `/thread/:id`       | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+| `DELETE` | `/thread/:id`       | 501 NOT IMPLEMENTED  | TBD                    | TBD                                                                                                                               |
+
+## Policy on breaking changes
+
+This API follows [semantic versioning](https://semver.org/).
+As such, all breaking changes will bump the major version.
+
+To ensure stability among all implementations using the API,
+the most recent release of the prior version will be fully supported for one month,
+including updates, bug fixes, and any other open issues.
+There will be at least two months from the breaking change until the prior version's endpoints are removed,
+at which point it will no longer be functional.
