@@ -27,14 +27,7 @@ export async function get_user(ctx: BaseContext) {
 
 export async function create_user(ctx: BaseContext) {
   const user_repository = getManager().getRepository(User);
-  const user_to_save = new User({
-    reddit_username: ctx.request.body.reddit_username,
-    auth_token: ctx.request.body.auth_token,
-    is_global_admin: ctx.request.body.is_global_admin === 'true',
-    spacex__is_admin: ctx.request.body.spacex__is_admin === 'true',
-    spacex__is_mod: ctx.request.body.spacex__is_mod === 'true',
-    spacex__is_slack_member: ctx.request.body.spacex__is_slack_member === 'true',
-  });
+  const user_to_save = new User({ ...ctx.request.body }); // clone in case anything is mutated
 
   const user = await user_repository.save(user_to_save);
 
@@ -64,7 +57,7 @@ export async function update_user(ctx: BaseContext) {
     return;
   }
 
-  // boolean fields that can be updated
+  // fields that can be updated
   [
     'is_global_admin',
     'spacex__is_admin',
@@ -72,7 +65,7 @@ export async function update_user(ctx: BaseContext) {
     'spacex__is_slack_member',
   ].forEach(field => {
     if (ctx.request.body[field] !== undefined) {
-      user_to_update[field] = ctx.request.body[field] === 'true';
+      user_to_update[field] = ctx.request.body[field];
     }
   });
 

@@ -9,16 +9,13 @@ import winston from 'winston';
 
 import { config } from './config';
 import { logger } from './logging';
+import { body_types } from './middleware/body_types';
 import * as v1 from './routers/v1';
 // import { sockets } from './sockets';
 
 create_connection({
   type: 'postgres',
-  host: config.db.host,
-  port: config.db.port,
-  username: config.db.username,
-  password: config.db.password,
-  database: config.db.database,
+  ...config.db,
   synchronize: true,
   logging: false,
   entities: ['dist/entities/**/*.js'],
@@ -35,6 +32,7 @@ create_connection({
   app.use(cors());
   app.use(logger(winston));
   app.use(body_parser());
+  app.use(body_types);
 
   app.use(v1.no_auth.routes()).use(v1.no_auth.allowedMethods());
 
