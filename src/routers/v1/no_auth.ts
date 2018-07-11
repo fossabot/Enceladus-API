@@ -1,6 +1,7 @@
 import Router from 'koa-router';
 import {
   preset_event,
+  thread,
   user,
 } from '../../controller';
 import STATUS from '../../controller/helpers/status_codes';
@@ -27,10 +28,15 @@ router.post('/preset_event', preset_event.create);
 router.patch('/preset_event/:id', preset_event.update);
 router.delete('/preset_event/:id', preset_event.remove);
 
+router.get('/thread', thread.get_all);
+router.get('/thread/:id', thread.get);
+router.post('/thread', thread.create);
+router.patch('/thread/:id', thread.update);
+router.delete('/thread/:id', thread.remove);
+
 [
   'event',
   'section',
-  'thread',
 ].forEach(type => {
   router.get(`/${type}`, ctx => ctx.status = STATUS.NOT_IMPLEMENTED);
   router.get(`/${type}/:id`, ctx => ctx.status = STATUS.NOT_IMPLEMENTED);

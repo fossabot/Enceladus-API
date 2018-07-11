@@ -8,6 +8,7 @@ import User from './User';
 
 interface ThreadFields {
   launch_name?: string;
+  post_id?: string | null;
   subreddit?: string;
   t0?: number | null;
   take_number?: number;
@@ -17,9 +18,12 @@ interface ThreadFields {
 
 @Entity()
 export default class Thread implements ThreadFields {
+  [key: string]: any;
+
   @PrimaryGeneratedColumn() public id: number;
   @Column() public launch_name: string;
   @Column() public subreddit: string;
+  @Column({ type: 'varchar', nullable: true }) public post_id: string | null;
   @Column({ type: 'integer', nullable: true }) public t0: number | null;
   @Column() public take_number: number = 1;
   @Column({ type: 'varchar', nullable: true }) public youtube_id: string | null;
@@ -30,6 +34,7 @@ export default class Thread implements ThreadFields {
   constructor(fields: ThreadFields = {}) {
     const {
       launch_name,
+      post_id,
       subreddit,
       t0,
       take_number,
@@ -38,6 +43,7 @@ export default class Thread implements ThreadFields {
     }: ThreadFields = fields;
 
     if (launch_name !== undefined) { this.launch_name = launch_name; }
+    if (post_id !== undefined) { this.post_id = post_id; }
     if (subreddit !== undefined) { this.subreddit = subreddit; }
     if (t0 !== undefined) { this.t0 = t0; }
     if (take_number !== undefined) { this.take_number = take_number; }

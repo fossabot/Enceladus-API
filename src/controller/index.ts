@@ -1,4 +1,5 @@
 import * as preset_event from './preset_event';
+import * as thread from './thread';
 import * as user from './user';
 
-export { user, preset_event };
+export { preset_event, thread, user };
