@@ -70,13 +70,15 @@ export default class Thread implements ThreadFields {
       const thread = new Thread();
 
       if (fields.created_by !== undefined) {
-        User.find(fields.created_by).then(created_by => {
+        User
+        .find(fields.created_by)
+        .then(created_by => {
           if (created_by === undefined) {
             reject('User not found');
           } else {
             thread.created_by = created_by;
           }
-        });
+        }).catch(() => reject('User not found'));
       }
 
       [

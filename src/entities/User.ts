@@ -32,8 +32,13 @@ export default class User implements UserFields {
     return await User.find(id) !== undefined;
   }
 
-  public static find(id: number): Promise<Option<User>> {
-    return getManager().getRepository(User).findOne(id);
+  public static async find(id: number): Promise<User> {
+    const user = await getManager().getRepository(User).findOne(id);
+
+    if (user === undefined) {
+      return Promise.reject('Thread not found');
+    }
+    return Promise.resolve(user);
   }
 
   public static find_all(): Promise<User[]> {
