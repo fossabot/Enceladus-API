@@ -3,6 +3,7 @@ import {
   // AfterRemove,
   // AfterUpdate,
   Column,
+  DeleteResult,
   Entity,
   getManager,
   OneToMany,
@@ -80,7 +81,7 @@ export default class User implements UserFields {
     return this;
   }
 
-  public delete() {
+  public delete(): Promise<DeleteResult> {
     return getManager().getRepository(User).delete(this);
   }
 

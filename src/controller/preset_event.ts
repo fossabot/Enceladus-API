@@ -1,19 +1,14 @@
-import { getManager } from 'typeorm';
 import PresetEvent from '../entities/PresetEvent';
 import { BaseContext } from './helpers/BaseContext';
 import STATUS from './helpers/status_codes';
 
 export async function get_all(ctx: BaseContext) {
-  const preset_event_repository = getManager().getRepository(PresetEvent);
-  const preset_events = await preset_event_repository.find();
-
+  ctx.body = await PresetEvent.find_all();
   ctx.status = STATUS.OK;
-  ctx.body = preset_events;
 }
 
 export async function get(ctx: BaseContext) {
-  const preset_event_repository = getManager().getRepository(PresetEvent);
-  const preset_event = await preset_event_repository.findOne(ctx.query.id);
+  const preset_event = await PresetEvent.find(ctx.query.id);
 
   if (preset_event === undefined) {
     ctx.status = STATUS.BAD_REQUEST;
@@ -21,68 +16,50 @@ export async function get(ctx: BaseContext) {
     return;
   }
 
-  ctx.status = STATUS.OK;
   ctx.body = preset_event;
+  ctx.status = STATUS.OK;
 }
 
 export async function create(ctx: BaseContext) {
-  const preset_event_repository = getManager().getRepository(PresetEvent);
-  const preset_event_to_save = new PresetEvent({ ...ctx.request.body });
-
-  const preset_event = await preset_event_repository.save(preset_event_to_save);
+  const preset_event = new PresetEvent(ctx.request.body);
 
   if (preset_event) {
+    ctx.body = await preset_event.save();
     ctx.status = STATUS.CREATED;
-    ctx.body = preset_event;
   } else {
-    ctx.status = STATUS.BAD_REQUEST;
     ctx.body = '';
+    ctx.status = STATUS.BAD_REQUEST;
   }
 }
 
 export async function update(ctx: BaseContext) {
-  const preset_event_repository = getManager().getRepository(PresetEvent);
-
   if (ctx.params.id === undefined) {
-    ctx.status = STATUS.BAD_REQUEST;
     ctx.body = 'No id provided';
-    return;
-  }
-
-  const preset_event_to_update = await preset_event_repository.findOne(ctx.params.id);
-
-  if (preset_event_to_update === undefined) {
     ctx.status = STATUS.BAD_REQUEST;
-    ctx.body = 'Preset event not found';
     return;
   }
 
-  // fields that can be updated
-  [
-    'holds_clock',
-    'message',
-    'name',
-  ].forEach(field => {
-    if (ctx.request.body[field] !== undefined) {
-      preset_event_to_update[field] = ctx.request.body[field];
-    }
-  });
+  const preset_event = await PresetEvent.find(ctx.params.id);
 
-  const preset_event = await preset_event_repository.save(preset_event_to_update);
+  if (preset_event === undefined) {
+    ctx.body = 'Preset event not found';
+    ctx.status = STATUS.BAD_REQUEST;
+    return;
+  }
+
+  ctx.body = await preset_event.update(ctx.request.body).save();
   ctx.status = STATUS.OK;
-  ctx.body = preset_event;
 }
 
 export async function remove(ctx: BaseContext) {
-  const preset_event_repository = getManager().getRepository(PresetEvent);
-  const preset_event_to_delete = await preset_event_repository.findOne(ctx.params.id);
+  const preset_event = await PresetEvent.find(ctx.params.id);
 
-  if (preset_event_to_delete === undefined) {
-    ctx.status = STATUS.BAD_REQUEST;
+  if (preset_event === undefined) {
     ctx.body = 'Preset event not found';
+    ctx.status = STATUS.BAD_REQUEST;
     return;
   }
 
-  await preset_event_repository.delete(preset_event_to_delete);
+  await preset_event.delete();
   ctx.status = STATUS.NO_CONTENT;
 }
