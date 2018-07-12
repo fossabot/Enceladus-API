@@ -29,7 +29,7 @@ and may change at any time without warning._
 | `GET`    | `/user`             | 200 OK               | Global admin        | _none_                                                                                                                        |
 | `GET`    | `/user/:id`         | 200 OK               | Global admin        | _none_                                                                                                                        |
 | `POST`   | `/user`             | 201 CREATED          | Global admin        | `reddit_username`<br>`auth_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member` |
-| `PATCH`  | `/user/:id`         | 200 OK               | Global admin        | `is_global_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member`                                                            |
+| `PATCH`  | `/user/:id`         | 200 OK               | Global admin        | `auth_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member`                      |
 | `DELETE` | `/user/:id`         | 204 NO CONTENT       | Global admin        | _none_                                                                                                                        |
 |          |                     |                      |                     |                                                                                                                               |
 | `GET`    | `/event`            | 501 NOT IMPLEMENTED  | TBD                 | TBD                                                                                                                           |
