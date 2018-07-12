@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { Queryable } from './Queryable';
 // import { sockets as io_namespace } from '../sockets';
 
 interface PresetEventFields {
@@ -21,15 +22,16 @@ interface PresetEventFields {
 
 @Entity()
 @Unique(['name'])
-export default class PresetEvent implements PresetEventFields {
+export default class PresetEvent implements PresetEventFields, Queryable {
   [key: string]: any;
 
-  public static async exists(id: number): Promise<boolean> {
-    return await PresetEvent.find(id) !== undefined;
-  }
+  public static async find(id: number): Promise<PresetEvent> {
+    const preset_event = await getManager().getRepository(PresetEvent).findOne(id);
 
-  public static find(id: number): Promise<Option<PresetEvent>> {
-    return getManager().getRepository(PresetEvent).findOne(id);
+    if (preset_event === undefined) {
+      return Promise.reject('Preset event not found');
+    }
+    return Promise.resolve(preset_event);
   }
 
   public static find_all(): Promise<PresetEvent[]> {
@@ -42,8 +44,6 @@ export default class PresetEvent implements PresetEventFields {
   @Column() public name: string;
 
   constructor(fields: PresetEventFields = {}) {
-    const { holds_clock, message, name }: PresetEventFields = fields;
-
     [
       'holds_clock',
       'message',
@@ -53,9 +53,6 @@ export default class PresetEvent implements PresetEventFields {
         this[field] = fields[field];
       }
     });
-    if (holds_clock !== undefined) { this.holds_clock = holds_clock; }
-    if (message !== undefined) { this.message = message; }
-    if (name !== undefined) { this.name = name; }
 
     // by default, the name is equal to the message
     if (this.name === undefined) {

@@ -1,5 +1,6 @@
 import User from '../entities/User';
 import { BaseContext } from './helpers/BaseContext';
+import { created, error, okay } from './helpers/method_binds';
 import STATUS from './helpers/status_codes';
 
 export async function get_all(ctx: BaseContext) {
@@ -10,25 +11,15 @@ export async function get_all(ctx: BaseContext) {
 export async function get(ctx: BaseContext) {
   await User
   .find(ctx.query.id)
-  .then(user => {
-    ctx.body = user;
-    ctx.status = STATUS.OK;
-  }).catch(err => {
-    ctx.body = err;
-    ctx.status = STATUS.BAD_REQUEST;
-  });
+  .then(okay.bind(ctx))
+  .catch(error.bind(ctx));
 }
 
 export async function create(ctx: BaseContext) {
   await new User(ctx.request.body)
   .save()
-  .then(user => {
-    ctx.body = user;
-    ctx.status = STATUS.CREATED;
-  }).catch(err => {
-    ctx.body = err;
-    ctx.status = STATUS.BAD_REQUEST;
-  });
+  .then(created.bind(ctx))
+  .catch(error.bind(ctx));
 }
 
 export async function update(ctx: BaseContext) {
@@ -36,14 +27,8 @@ export async function update(ctx: BaseContext) {
   .find(ctx.params.id)
   .then(user => user.update(ctx.request.body))
   .then(user => user.save())
-  .then(user => {
-    ctx.body = user;
-    ctx.status = STATUS.OK;
-  })
-  .catch(err => {
-    ctx.body = err;
-    ctx.status = STATUS.BAD_REQUEST;
-  });
+  .then(okay.bind(ctx))
+  .catch(error.bind(ctx));
 }
 
 export async function remove(ctx: BaseContext) {
@@ -51,8 +36,5 @@ export async function remove(ctx: BaseContext) {
   .find(ctx.params.id)
   .then(user => user.delete())
   .then(() => ctx.status = STATUS.NO_CONTENT)
-  .catch(err => {
-    ctx.body = err;
-    ctx.status = STATUS.BAD_REQUEST;
-  });
+  .catch(error.bind(ctx));
 }

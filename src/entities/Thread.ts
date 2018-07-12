@@ -10,6 +10,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Queryable } from './Queryable';
 // import { sockets as io_namespace } from '../sockets';
 import Section from './Section';
 import User from './User';
@@ -27,12 +28,8 @@ interface ThreadFields {
 }
 
 @Entity()
-export default class Thread implements ThreadFields {
+export default class Thread implements ThreadFields, Queryable {
   [key: string]: any;
-
-  public static async exists(id: number): Promise<boolean> {
-    return await Thread.find(id) !== undefined;
-  }
 
   public static async find(id: number): Promise<Thread> {
     const thread = await getManager().getRepository(Thread).findOne(id);
