@@ -1,0 +1,30 @@
+language: node_js
+node_js:
+  - 8
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+script:
+  - yarn lint
+  - yarn build
+
+before_deploy:
+  - yarn doc
+
+deploy:
+  on:
+    branch: master
+    repo: r-spacex/enceladus-api
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  local-dir: doc
+
+notifications:
+  email:
+    on_success: never
+    on_failure: never
+

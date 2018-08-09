@@ -4,6 +4,7 @@
 
 ![License][license]
 ![Version][version]
+![Build][build]
 
 ## Endpoints
 
@@ -71,4 +72,5 @@ at which point it will no longer be functional.
 [semantic versioning]: https://semver.org
 [license]: https://img.shields.io/github/license/r-spacex/enceladus-api.svg?style=flat-square
 [version]: https://img.shields.io/github/package-json/v/r-spacex/enceladus-api.svg?style=flat-square
+[build]: https://img.shields.io/travis/r-spacex/enceladus-api.svg?style=flat-square
 [docs]: https://r-spacex.github.io/enceladus-api
