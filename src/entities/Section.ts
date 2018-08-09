@@ -1,3 +1,5 @@
+import assign from 'lodash/assign';
+import pick from 'lodash/pick';
 import {
   /* AfterInsert, AfterRemove, AfterUpdate,*/ Column, Entity, ManyToOne, OneToMany,
   PrimaryGeneratedColumn,
@@ -22,10 +24,7 @@ export default class Section implements SectionFields {
   @ManyToOne(() => Thread, thread => thread.sections) public belongs_to_thread: Thread;
 
   constructor(fields: SectionFields = {}) {
-    const { content, name }: SectionFields = fields;
-
-    if (content !== undefined) { this.content = content; }
-    if (name !== undefined) { this.name = name; }
+    assign(this, pick(fields, ['content', 'name']));
   }
 
   // @AfterInsert() protected emit_insert() {

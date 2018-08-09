@@ -1,0 +1,10 @@
+{
+  "plugins": [
+    "babel-plugin-transform-inline-environment-variables",
+    "babel-plugin-transform-inline-consecutive-adds",
+    "babel-plugin-minify-constant-folding",
+    "babel-plugin-minify-dead-code-elimination",
+    "babel-plugin-minify-constants",
+    "babel-plugin-closure-elimination",
+  ]
+}

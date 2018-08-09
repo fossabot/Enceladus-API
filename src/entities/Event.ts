@@ -1,3 +1,5 @@
+import assign from 'lodash/assign';
+import pick from 'lodash/pick';
 import {
   /* AfterInsert, AfterRemove, AfterUpdate,*/ Column, Entity, ManyToOne, PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -19,11 +21,7 @@ export default class Event implements EventFields {
   @ManyToOne(() => Section, section => section.events) public belongs_to_section: Section;
 
   constructor(fields: EventFields = {}) {
-    const { message, posted, terminal_count }: EventFields = fields;
-
-    if (message !== undefined) { this.message = message; }
-    if (posted !== undefined) { this.posted = posted; }
-    if (terminal_count !== undefined) { this.terminal_count = terminal_count; }
+    assign(this, pick(fields, ['message', 'posted', 'terminal_count']));
   }
 
   // @AfterInsert() protected emit_insert() {

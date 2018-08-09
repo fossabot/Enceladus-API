@@ -1,3 +1,5 @@
+import assign from 'lodash/assign';
+import pick from 'lodash/pick';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -18,7 +20,8 @@ interface UserFields {
   [key: string]: any;
 
   reddit_username?: string;
-  auth_token?: string;
+  lang?: string;
+  refresh_token?: string;
   is_global_admin?: boolean;
   spacex__is_admin?: boolean;
   spacex__is_mod?: boolean;
@@ -30,21 +33,26 @@ export default class User implements UserFields, Queryable {
   [key: string]: any;
 
   public static async find(id: number): Promise<User> {
-    const user = await getManager().getRepository(User).findOne(id);
+    const user = await getManager()
+      .getRepository(User)
+      .findOne(id);
 
     if (user === undefined) {
-      return Promise.reject('Thread not found');
+      return Promise.reject('User not found');
     }
     return Promise.resolve(user);
   }
 
   public static find_all(): Promise<User[]> {
-    return getManager().getRepository(User).find();
+    return getManager()
+      .getRepository(User)
+      .find();
   }
 
   @PrimaryGeneratedColumn() public id: number;
   @Column({ unique: true, readonly: true }) public reddit_username: string;
-  @Column({ readonly: true }) public auth_token: string;
+  @Column() public lang: string;
+  @Column({ readonly: true }) public refresh_token: string;
   @Column() public is_global_admin: boolean = false;
   @Column() public spacex__is_admin: boolean = false;
   @Column() public spacex__is_mod: boolean = false;
@@ -53,42 +61,46 @@ export default class User implements UserFields, Queryable {
   @OneToMany(() => Section, section => section.lock_held_by) public section_locks_held: Section[];
 
   constructor(fields: UserFields = {}) {
-    [
-      'reddit_username',
-      'auth_token',
-      'is_global_admin',
-      'spacex__is_admin',
-      'spacex__is_mod',
-      'spacex__is_slack_member',
-    ].forEach(field => {
-      if (fields[field] !== undefined) {
-        this[field] = fields[field];
-      }
-    });
+    assign(
+      this,
+      pick(fields, [
+        'reddit_username',
+        'lang',
+        'refresh_token',
+        'is_global_admin',
+        'spacex__is_admin',
+        'spacex__is_mod',
+        'spacex__is_slack_member',
+      ]),
+    );
   }
 
   public update(fields: UserFields = {}): this {
-    [
-      'auth_token',
-      'is_global_admin',
-      'spacex__is_admin',
-      'spacex__is_mod',
-      'spacex__is_slack_member',
-    ].forEach(field => {
-      if (fields[field] !== undefined) {
-        this[field] = fields[field];
-      }
-    });
+    assign(
+      this,
+      pick(fields, [
+        'refresh_token',
+        'lang',
+        'is_global_admin',
+        'spacex__is_admin',
+        'spacex__is_mod',
+        'spacex__is_slack_member',
+      ]),
+    );
 
     return this;
   }
 
   public delete(): Promise<DeleteResult> {
-    return getManager().getRepository(User).delete(this);
+    return getManager()
+      .getRepository(User)
+      .delete(this);
   }
 
   public save(): Promise<this> {
-    return getManager().getRepository(User).save(this);
+    return getManager()
+      .getRepository(User)
+      .save(this);
   }
 
   // @AfterInsert() protected emit_insert() {

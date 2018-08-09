@@ -1,3 +1,5 @@
+import assign from 'lodash/assign';
+import pick from 'lodash/pick';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -26,7 +28,9 @@ export default class PresetEvent implements PresetEventFields, Queryable {
   [key: string]: any;
 
   public static async find(id: number): Promise<PresetEvent> {
-    const preset_event = await getManager().getRepository(PresetEvent).findOne(id);
+    const preset_event = await getManager()
+      .getRepository(PresetEvent)
+      .findOne(id);
 
     if (preset_event === undefined) {
       return Promise.reject('Preset event not found');
@@ -35,7 +39,9 @@ export default class PresetEvent implements PresetEventFields, Queryable {
   }
 
   public static find_all(): Promise<PresetEvent[]> {
-    return getManager().getRepository(PresetEvent).find();
+    return getManager()
+      .getRepository(PresetEvent)
+      .find();
   }
 
   @PrimaryGeneratedColumn() public id: number;
@@ -44,15 +50,7 @@ export default class PresetEvent implements PresetEventFields, Queryable {
   @Column() public name: string;
 
   constructor(fields: PresetEventFields = {}) {
-    [
-      'holds_clock',
-      'message',
-      'name',
-    ].forEach(field => {
-      if (fields[field] !== undefined) {
-        this[field] = fields[field];
-      }
-    });
+    assign(this, pick(fields, ['holds_clock', 'message', 'name']));
 
     // by default, the name is equal to the message
     if (this.name === undefined) {
@@ -61,25 +59,19 @@ export default class PresetEvent implements PresetEventFields, Queryable {
   }
 
   public update(fields: PresetEventFields = {}): this {
-    [
-      'holds_clock',
-      'message',
-      'name',
-    ].forEach(field => {
-      if (fields[field] !== undefined) {
-        this[field] = fields[field];
-      }
-    });
-
-    return this;
+    return assign(this, pick(fields, ['holds_clock', 'message', 'name']));
   }
 
   public delete(): Promise<DeleteResult> {
-    return getManager().getRepository(PresetEvent).delete(this);
+    return getManager()
+      .getRepository(PresetEvent)
+      .delete(this);
   }
 
   public save(): Promise<this> {
-    return getManager().getRepository(PresetEvent).save(this);
+    return getManager()
+      .getRepository(PresetEvent)
+      .save(this);
   }
 
   // @AfterInsert() protected emit_insert() {

@@ -1,3 +1,5 @@
+import assign from 'lodash/assign';
+import pick from 'lodash/pick';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -32,7 +34,9 @@ export default class Thread implements ThreadFields, Queryable {
   [key: string]: any;
 
   public static async find(id: number): Promise<Thread> {
-    const thread = await getManager().getRepository(Thread).findOne(id);
+    const thread = await getManager()
+      .getRepository(Thread)
+      .findOne(id);
 
     if (thread === undefined) {
       return Promise.reject('Thread not found');
@@ -41,7 +45,9 @@ export default class Thread implements ThreadFields, Queryable {
   }
 
   public static find_all(): Promise<Thread[]> {
-    return getManager().getRepository(Thread).find();
+    return getManager()
+      .getRepository(Thread)
+      .find();
   }
 
   @PrimaryGeneratedColumn() public id: number;
@@ -62,62 +68,57 @@ export default class Thread implements ThreadFields, Queryable {
    *
    * @constructor
    */
-  public static new(fields: ThreadFields = {}) { // tslint:disable member-ordering
+  public static new(fields: ThreadFields = {}) {
+    // tslint:disable member-ordering
     return new Promise<Thread>((resolve, reject) => {
       const thread = new Thread();
 
       if (fields.created_by !== undefined) {
-        User
-        .find(fields.created_by)
-        .then(created_by => {
-          if (created_by === undefined) {
-            reject('User not found');
-          } else {
-            thread.created_by = created_by;
-          }
-        }).catch(() => reject('User not found'));
+        User.find(fields.created_by)
+          .then(created_by => {
+            if (created_by === undefined) {
+              reject('User not found');
+            } else {
+              thread.created_by = created_by;
+            }
+          })
+          .catch(() => reject('User not found'));
       }
 
-      [
-        'launch_name',
-        'post_id',
-        'subreddit',
-        't0',
-        'take_number',
-        'youtube_id',
-        'spacex__api_id',
-      ].forEach(field => {
-        if (fields[field] !== undefined) {
-          thread[field] = fields[field];
-        }
-      });
-
-      resolve(thread);
+      resolve(
+        assign(
+          thread,
+          pick(fields, [
+            'launch_name',
+            'post_id',
+            'subreddit',
+            't0',
+            'take_number',
+            'youtube_id',
+            'spacex__api_id',
+          ]),
+        ),
+      );
     });
   }
 
   public update(fields: ThreadFields = {}): this {
-    [
-      'launch_name',
-      't0',
-      'take_number',
-      'youtube_id',
-      'spacex__api_id',
-    ].forEach(field => {
-      if (fields[field] !== undefined) {
-        this[field] = fields[field];
-      }
-    });
-
-    return this;
+    return assign(
+      this,
+      pick(fields, ['launch_name', 't0', 'take_number', 'youtube_id', 'spacex__api_id']),
+    );
   }
 
   public delete(): Promise<DeleteResult> {
-    return getManager().getRepository(Thread).delete(this);
+    return getManager()
+      .getRepository(Thread)
+      .delete(this);
   }
 
   public save(): Promise<this> {
-    return getManager().getRepository(Thread).save(this);
+    return getManager()
+      .getRepository(Thread)
+      .save(this);
   }
 
   // @AfterInsert() protected emit_insert() {

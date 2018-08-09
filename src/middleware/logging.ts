@@ -1,15 +1,15 @@
 import Koa from 'koa';
 import Winston from 'winston';
-import { config } from './config';
-import STATUS from './controller/helpers/status_codes';
+import { config } from '../config';
+import STATUS from '../controller/helpers/status_codes';
 
 export function logger(winston: typeof Winston) {
   return async (ctx: Koa.Context, next: () => Promise<any>) => {
-    const start = new Date().getMilliseconds();
+    const start = Date.now();
 
     await next();
 
-    const ms = new Date().getMilliseconds() - start;
+    const ms = Date.now() - start;
 
     let log_level: string = 'info';
     if (ctx.status >= 400) { log_level = 'warn'; }
