@@ -2184,9 +2184,9 @@ options@>=0.0.5:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/options/-/options-0.0.6.tgz#ec22d312806bb53e731773e7cdaefcf1c643128f"
 
-orangered@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/orangered/-/orangered-0.3.0.tgz#0f82bf56cf7af48d81d001826f5ba9f13750ebe2"
+orangered@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/orangered/-/orangered-0.3.2.tgz#d9f55d144d305e4a161d4ccc8fce26cfd3166a41"
   dependencies:
     lodash-decorators "^6.0.0"
     lodash.get "^4.4.2"

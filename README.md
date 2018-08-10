@@ -25,8 +25,10 @@ due to uncertainty about the specific architecture.
 _Version 1 is in progress,
 and may change at any time without warning._
 
-| Method   | Endpoint            | Expected status     | Min. authn.   | Allowed body parameters                                                                                                                    |
+| Method   | Endpoint            | Expected status     | Min. authn.   | Allowed parameters                                                                                                                         |
 | -------- | ------------------- | ------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `GET`    | `/oauth`            | 200 ok              | None          | `callback`                                                                                                                                 |
+| `GET`    | `/oauth/callback`   | 303 see other       | None          | `code`<br>`state`                                                                                                                          |
 | `GET`    | `/user`             | 200 ok              | None*         | _none_                                                                                                                                     |
 | `GET`    | `/user/:id`         | 200 ok              | None*         | _none_                                                                                                                                     |
 | `POST`   | `/user`             | 201 created         | Global admin  | `reddit_username`<br>`lang`<br>`refresh_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member` |
@@ -55,6 +57,15 @@ and may change at any time without warning._
 
 \* No authentication is required for accessing most data.
 Must be authenticated as a _global admin_ in order to access refresh tokens.
+
+## Authentication flow
+
+To authenticate a user,
+you should make a GET request to `/oauth`,
+with the URL parameter `callback`.
+The callback provided will be called with a URL parameter `token` upon success.
+That token contains the user's reddit username,
+and should be passed in the headers to authenticate the user for the appropriate endpoints.
 
 ## Policy on breaking changes
 

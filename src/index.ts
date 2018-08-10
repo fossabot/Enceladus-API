@@ -10,9 +10,11 @@ import winston from 'winston';
 import { config } from './config';
 import { body_types } from './middleware/body_types';
 import { logger } from './middleware/logging';
-import { router as jwt_endpoint } from './routers/jwt';
+import { router as oauth_endpoints } from './routers/oauth';
 import * as v1 from './routers/v1';
 // import { sockets } from './sockets';
+
+import './reddit';
 
 create_connection({
   type: 'postgres',
@@ -36,10 +38,11 @@ create_connection({
   app.use(body_types);
 
   app.use(v1.no_auth.routes()).use(v1.no_auth.allowedMethods());
+  app.use(oauth_endpoints.routes()).use(oauth_endpoints.allowedMethods());
 
   // require valid JWT to continue
   app.use(jwt({ secret: config.jwt_secret }));
-  app.use(jwt_endpoint.routes()).use(jwt_endpoint.allowedMethods());
+  // other routes here
 
   app.listen(config.port);
   console.log(`Server listening on port ${config.port}`);
