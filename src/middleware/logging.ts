@@ -1,7 +1,7 @@
 import Koa from 'koa';
 import Winston from 'winston';
 import { config } from '../config';
-import STATUS from '../controller/helpers/status_codes';
+import STATUS from '../helpers/status_codes';
 
 export function logger(winston: typeof Winston) {
   return async (ctx: Koa.Context, next: () => Promise<unknown>) => {

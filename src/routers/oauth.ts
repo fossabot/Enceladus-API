@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Router from 'koa-router';
 import Reddit from 'orangered';
 import { config } from '../config';
-import STATUS from '../controller/helpers/status_codes';
+import STATUS from '../helpers/status_codes';
 
 import User from '../entities/User';
 

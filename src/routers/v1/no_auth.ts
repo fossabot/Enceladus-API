@@ -1,13 +1,11 @@
 import jwt from 'jsonwebtoken';
 import Router from 'koa-router';
-import once from 'lodash/once';
-import { config } from '../../config';
 import {
   preset_event,
   thread,
   user,
 } from '../../controller';
-import STATUS from '../../controller/helpers/status_codes';
+import STATUS from '../../helpers/status_codes';
 
 /**
  * router with **no authentication required**

@@ -1,5 +1,5 @@
 import memoize from 'lodash/memoize';
-import { BaseContext } from '../controller/helpers/BaseContext';
+import { BaseContext } from '../helpers/BaseContext';
 
 export async function body_types(ctx: BaseContext, next: () => Promise<unknown>) {
   const { body } = ctx.request;

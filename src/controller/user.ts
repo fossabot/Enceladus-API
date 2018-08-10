@@ -1,8 +1,8 @@
 import once from 'lodash/once';
 import User from '../entities/User';
-import { BaseContext } from './helpers/BaseContext';
-import { created, error, okay } from './helpers/method_binds';
-import STATUS from './helpers/status_codes';
+import { BaseContext } from '../helpers/BaseContext';
+import { created, error, okay } from '../helpers/method_binds';
+import STATUS from '../helpers/status_codes';
 
 export async function get_all(ctx: BaseContext) {
   ctx.body = await User.find_all();
