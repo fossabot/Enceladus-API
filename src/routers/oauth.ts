@@ -26,23 +26,24 @@ router.get('/oauth/callback', async ctx => {
 
   const callback_url = pending_states[state];
   if (callback_url === undefined) {
-    ctx.status = 410; // 410 GONE
-    ctx.body = "Oh no! We don't have that state any more. Users must be " +
-      'authenticated within one hour of the original request, or else we ' +
-      'lose the information we need. Consider trying again from your ' +
-      'preferred client.';
+    ctx.status = STATUS.GONE;
+    ctx.body = "Oh no! We don't have that state any more. Consider trying " +
+      'again from your preferred client.';
     return;
   }
 
   const reddit = await new Reddit().auth({ code, state });
+  const [{ name: username }, { lang }] = await Promise.all([
+    reddit.me(),
+    reddit.prefs(),
+  ]);
+
   const { refresh_token } = reddit;
-  const { name: reddit_username } = await reddit.me();
-  const { lang } = await reddit.prefs();
 
   // we have all the information necessary.
   // let's create a user in the database.
   await new User({
-    reddit_username,
+    reddit_username: username,
     lang,
     refresh_token,
     is_global_admin: false,
@@ -51,7 +52,7 @@ router.get('/oauth/callback', async ctx => {
     spacex__is_slack_member: false,
   }).save();
 
-  const token = jwt.sign({ username: reddit_username }, config.jwt_secret);
-  ctx.status = 303;
-  ctx.redirect(callback_url + '?token=' + token);
+  const token = jwt.sign({ username }, config.jwt_secret, { noTimestamp: true });
+  ctx.status = STATUS.SEE_ALSO;
+  ctx.redirect(`${callback_url}?token=${token}`);
 });

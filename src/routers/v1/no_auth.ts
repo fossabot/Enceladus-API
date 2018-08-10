@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import Router from 'koa-router';
+import once from 'lodash/once';
 import { config } from '../../config';
 import {
   preset_event,
@@ -15,13 +16,6 @@ export const router = new Router();
 
 // TODO welcome page
 router.get('/', ctx => ctx.status = STATUS.NOT_IMPLEMENTED);
-
-router.get('/jwt', ctx => {
-  const user = 'theZcuber'; // tslint:disable-line no-shadowed-variable
-
-  ctx.body = jwt.sign({ user }, config.jwt_secret, { noTimestamp: true });
-  ctx.status = STATUS.OK;
-});
 
 // FIXME authentication is needed for many routes below
 

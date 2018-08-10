@@ -15,8 +15,6 @@ import { Queryable } from './Queryable';
 // import { sockets as io_namespace } from '../sockets';
 
 interface PresetEventFields {
-  [key: string]: any;
-
   holds_clock?: boolean;
   message?: string;
   name?: string;
@@ -25,17 +23,15 @@ interface PresetEventFields {
 @Entity()
 @Unique(['name'])
 export default class PresetEvent implements PresetEventFields, Queryable {
-  [key: string]: any;
-
   public static async find(id: number): Promise<PresetEvent> {
     const preset_event = await getManager()
       .getRepository(PresetEvent)
       .findOne(id);
 
     if (preset_event === undefined) {
-      return Promise.reject('Preset event not found');
+      throw new Error('Preset event not found');
     }
-    return Promise.resolve(preset_event);
+    return preset_event;
   }
 
   public static find_all(): Promise<PresetEvent[]> {
@@ -65,7 +61,7 @@ export default class PresetEvent implements PresetEventFields, Queryable {
   public delete(): Promise<DeleteResult> {
     return getManager()
       .getRepository(PresetEvent)
-      .delete(this);
+      .delete(this.id);
   }
 
   public save(): Promise<this> {

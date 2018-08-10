@@ -1,5 +1,6 @@
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
+import property from 'lodash/property';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -17,8 +18,6 @@ import Section from './Section';
 import Thread from './Thread';
 
 interface UserFields {
-  [key: string]: any;
-
   reddit_username?: string;
   lang?: string;
   refresh_token?: string;
@@ -30,17 +29,15 @@ interface UserFields {
 
 @Entity()
 export default class User implements UserFields, Queryable {
-  [key: string]: any;
-
   public static async find(id: number): Promise<User> {
     const user = await getManager()
       .getRepository(User)
       .findOne(id);
 
     if (user === undefined) {
-      return Promise.reject('User not found');
+      throw new Error('User not found');
     }
-    return Promise.resolve(user);
+    return user;
   }
 
   public static find_all(): Promise<User[]> {
@@ -57,8 +54,8 @@ export default class User implements UserFields, Queryable {
   @Column() public spacex__is_admin: boolean = false;
   @Column() public spacex__is_mod: boolean = false;
   @Column() public spacex__is_slack_member: boolean = false;
-  @OneToMany(() => Thread, thread => thread.created_by) public threads_created: Thread[];
-  @OneToMany(() => Section, section => section.lock_held_by) public section_locks_held: Section[];
+  @OneToMany(() => Thread, property('created_by')) public threads_created: Thread[];
+  @OneToMany(() => Section, property('lock_held_by')) public section_locks_held: Section[];
 
   constructor(fields: UserFields = {}) {
     assign(
@@ -94,7 +91,7 @@ export default class User implements UserFields, Queryable {
   public delete(): Promise<DeleteResult> {
     return getManager()
       .getRepository(User)
-      .delete(this);
+      .delete(this.id);
   }
 
   public save(): Promise<this> {

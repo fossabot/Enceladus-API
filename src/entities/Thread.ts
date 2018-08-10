@@ -1,5 +1,6 @@
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
+import property from 'lodash/property';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -18,7 +19,7 @@ import Section from './Section';
 import User from './User';
 
 interface ThreadFields {
-  [key: string]: any;
+  [key: string]: unknown;
 
   launch_name?: string;
   post_id?: string | null;
@@ -27,6 +28,7 @@ interface ThreadFields {
   take_number?: number;
   youtube_id?: string | null;
   spacex__api_id?: string | null;
+  created_by?: User;
 }
 
 @Entity()
@@ -39,9 +41,9 @@ export default class Thread implements ThreadFields, Queryable {
       .findOne(id);
 
     if (thread === undefined) {
-      return Promise.reject('Thread not found');
+      throw new Error('Thread not found');
     }
-    return Promise.resolve(thread);
+    return thread;
   }
 
   public static find_all(): Promise<Thread[]> {
@@ -57,8 +59,8 @@ export default class Thread implements ThreadFields, Queryable {
   @Column({ type: 'integer', nullable: true }) public t0: number | null;
   @Column() public take_number: number = 1;
   @Column({ type: 'varchar', nullable: true }) public youtube_id: string | null;
-  @OneToMany(() => Section, section => section.belongs_to_thread) public sections: Section[];
-  @ManyToOne(() => User, user => user.threads_created) public created_by: User;
+  @OneToMany(() => Section, property('belongs_to_thread')) public sections: Section[];
+  @ManyToOne(() => User, property('threads_created')) public created_by: User;
   @Column({ type: 'varchar', nullable: true }) public spacex__api_id: string | null;
 
   /**
@@ -68,13 +70,13 @@ export default class Thread implements ThreadFields, Queryable {
    *
    * @constructor
    */
+  // tslint:disable-next-line member-ordering
   public static new(fields: ThreadFields = {}) {
-    // tslint:disable member-ordering
     return new Promise<Thread>((resolve, reject) => {
       const thread = new Thread();
 
       if (fields.created_by !== undefined) {
-        User.find(fields.created_by)
+        User.find(fields.created_by.id)
           .then(created_by => {
             if (created_by === undefined) {
               reject('User not found');
@@ -112,7 +114,7 @@ export default class Thread implements ThreadFields, Queryable {
   public delete(): Promise<DeleteResult> {
     return getManager()
       .getRepository(Thread)
-      .delete(this);
+      .delete(this.id);
   }
 
   public save(): Promise<this> {

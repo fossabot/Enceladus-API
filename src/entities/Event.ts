@@ -1,5 +1,6 @@
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
+import property from 'lodash/property';
 import {
   /* AfterInsert, AfterRemove, AfterUpdate,*/ Column, Entity, ManyToOne, PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -18,7 +19,7 @@ export default class Event implements EventFields {
   @Column('text') public message: string = '';
   @Column() public posted: boolean = false;
   @Column() public terminal_count: string = '';
-  @ManyToOne(() => Section, section => section.events) public belongs_to_section: Section;
+  @ManyToOne(() => Section, property('events')) public belongs_to_section: Section;
 
   constructor(fields: EventFields = {}) {
     assign(this, pick(fields, ['message', 'posted', 'terminal_count']));
