@@ -33,7 +33,7 @@ router.get('/oauth/callback', async ctx => {
   }
 
   const reddit = await new Reddit().auth({ code, state });
-  const [{ name: username }, { lang }] = await Promise.all([
+  const [{ name: reddit_username }, { lang }] = await Promise.all([
     reddit.me(),
     reddit.prefs(),
   ]);
@@ -43,7 +43,7 @@ router.get('/oauth/callback', async ctx => {
   // we have all the information necessary.
   // let's create a user in the database.
   await new User({
-    reddit_username: username,
+    reddit_username,
     lang,
     refresh_token,
     is_global_admin: false,
@@ -52,7 +52,7 @@ router.get('/oauth/callback', async ctx => {
     spacex__is_slack_member: false,
   }).save();
 
-  const token = jwt.sign({ username }, config.jwt_secret, { noTimestamp: true });
+  const token = jwt.sign({ user: reddit_username }, config.jwt_secret, { noTimestamp: true });
   ctx.status = STATUS.SEE_ALSO;
   ctx.redirect(`${callback_url}?token=${token}`);
 });

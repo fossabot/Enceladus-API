@@ -1,2 +1,14 @@
 import { BaseContext } from 'koa';
-export type BaseContext = BaseContext & { params: any, request: any };
+export type BaseContext = BaseContext & {
+  params: any;
+  request: any;
+  state: {
+    user?: { user: string };
+    user_data?: {
+      is_global_admin: boolean;
+      spacex__is_admin: boolean;
+      spacex__is_mod: boolean;
+      spacex__is_slack_member: boolean;
+    };
+  };
+};

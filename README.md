@@ -24,36 +24,38 @@ due to uncertainty about the specific architecture.
 
 _Version 1 is in progress,
 and may change at any time without warning._
+Certain endpoints _are_ functional,
+and have the appropriate authentication checks in place.
 
-| Method   | Endpoint            | Expected status     | Min. authn.   | Allowed parameters                                                                                                                         |
-| -------- | ------------------- | ------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `GET`    | `/oauth`            | 200 ok              | None          | `callback`                                                                                                                                 |
-| `GET`    | `/oauth/callback`   | 303 see other       | None          | `code`<br>`state`                                                                                                                          |
-| `GET`    | `/user`             | 200 ok              | None*         | _none_                                                                                                                                     |
-| `GET`    | `/user/:id`         | 200 ok              | None*         | _none_                                                                                                                                     |
-| `POST`   | `/user`             | 201 created         | Global admin  | `reddit_username`<br>`lang`<br>`refresh_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member` |
-| `PATCH`  | `/user/:id`         | 200 ok              | Global admin  | `lang`<br>`refresh_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member`                      |
-| `DELETE` | `/user/:id`         | 204 no content      | Global admin  | _none_                                                                                                                                     |
-| `GET`    | `/event`            | 501 not implemented | TBD           | TBD                                                                                                                                        |
-| `GET`    | `/event/:id`        | 501 not implemented | TBD           | TBD                                                                                                                                        |
-| `POST`   | `/event`            | 501 not implemented | TBD           | TBD                                                                                                                                        |
-| `PATCH`  | `/event/:id`        | 501 not implemented | TBD           | TBD                                                                                                                                        |
-| `DELETE` | `/event/:id`        | 501 not implemented | TBD           | TBD                                                                                                                                        |
-| `GET`    | `/preset_event`     | 200 ok              | None          | _none_                                                                                                                                     |
-| `GET`    | `/preset_event/:id` | 200 ok              | None          | _none_                                                                                                                                     |
-| `POST`   | `/preset_event`     | 201 created         | Global admin  | `holds_clock`<br>`message`<br>`name`                                                                                                       |
-| `PATCH`  | `/preset_event/:id` | 200 ok              | Global admin  | `holds_clock`<br>`message`<br>`name`                                                                                                       |
-| `DELETE` | `/preset_event/:id` | 204 no content      | Global admin  | _none_                                                                                                                                     |
-| `GET`    | `/section`          | 501 not implemented | TBD           | TBD                                                                                                                                        |
-| `GET`    | `/section/:id`      | 501 not implemented | TBD           | TBD                                                                                                                                        |
-| `POST`   | `/section`          | 501 not implemented | TBD           | TBD                                                                                                                                        |
-| `PATCH`  | `/section/:id`      | 501 not implemented | TBD           | TBD                                                                                                                                        |
-| `DELETE` | `/section/:id`      | 501 not implemented | TBD           | TBD                                                                                                                                        |
-| `GET`    | `/thread`           | 200 ok              | None          | _none_                                                                                                                                     |
-| `GET`    | `/thread/:id`       | 200 ok              | None          | _none_                                                                                                                                     |
-| `POST`   | `/thread`           | 201 created         | Signed in     | `launch_name`<br>`subreddit`<br>`t0`<br>`take_number`<br>`youtube_id`<br>`created_by`<br>`spacex__api_id`                                  |
-| `PATCH`  | `/thread/:id`       | 200 ok              | Thread author | `launch_name`<br>`t0`<br>`take_number`<br>`youtube_id`<br>`created_by`<br>`spacex__api_id`                                                 |
-| `DELETE` | `/thread/:id`       | 204 no content      | Thread author | _none_                                                                                                                                     |
+| Functional?        | Method   | Endpoint               | Expected status     | Min. authn.   | Allowed parameters                                                                                                                         |
+| ------------------ | -------- | ---------------------- | ------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| :heavy_check_mark: | `GET`    | `/oauth`               | 200 ok              | None          | `callback`                                                                                                                                 |
+| :heavy_check_mark: | `GET`    | `/oauth/callback`      | 303 see other       | None          | `code`<br>`state`                                                                                                                          |
+| :x:                | `GET`    | `/v1/user`             | 200 ok              | None*         | _none_                                                                                                                                     |
+| :x:                | `GET`    | `/v1/user/:id`         | 200 ok              | None*         | _none_                                                                                                                                     |
+| :heavy_check_mark: | `POST`   | `/v1/user`             | 201 created         | Global admin  | `reddit_username`<br>`lang`<br>`refresh_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member` |
+| :heavy_check_mark: | `PATCH`  | `/v1/user/:id`         | 200 ok              | Global admin  | `lang`<br>`refresh_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member`                      |
+| :heavy_check_mark: | `DELETE` | `/v1/user/:id`         | 204 no content      | Global admin  | _none_                                                                                                                                     |
+| :x:                | `GET`    | `/v1/event`            | 501 not implemented | TBD           | TBD                                                                                                                                        |
+| :x:                | `GET`    | `/v1/event/:id`        | 501 not implemented | TBD           | TBD                                                                                                                                        |
+| :x:                | `POST`   | `/v1/event`            | 501 not implemented | TBD           | TBD                                                                                                                                        |
+| :x:                | `PATCH`  | `/v1/event/:id`        | 501 not implemented | TBD           | TBD                                                                                                                                        |
+| :x:                | `DELETE` | `/v1/event/:id`        | 501 not implemented | TBD           | TBD                                                                                                                                        |
+| :heavy_check_mark: | `GET`    | `/v1/preset_event`     | 200 ok              | None          | _none_                                                                                                                                     |
+| :heavy_check_mark: | `GET`    | `/v1/preset_event/:id` | 200 ok              | None          | _none_                                                                                                                                     |
+| :heavy_check_mark: | `POST`   | `/v1/preset_event`     | 201 created         | Global admin  | `holds_clock`<br>`message`<br>`name`                                                                                                       |
+| :heavy_check_mark: | `PATCH`  | `/v1/preset_event/:id` | 200 ok              | Global admin  | `holds_clock`<br>`message`<br>`name`                                                                                                       |
+| :heavy_check_mark: | `DELETE` | `/v1/preset_event/:id` | 204 no content      | Global admin  | _none_                                                                                                                                     |
+| :x:                | `GET`    | `/v1/section`          | 501 not implemented | TBD           | TBD                                                                                                                                        |
+| :x:                | `GET`    | `/v1/section/:id`      | 501 not implemented | TBD           | TBD                                                                                                                                        |
+| :x:                | `POST`   | `/v1/section`          | 501 not implemented | TBD           | TBD                                                                                                                                        |
+| :x:                | `PATCH`  | `/v1/section/:id`      | 501 not implemented | TBD           | TBD                                                                                                                                        |
+| :x:                | `DELETE` | `/v1/section/:id`      | 501 not implemented | TBD           | TBD                                                                                                                                        |
+| :heavy_check_mark: | `GET`    | `/v1/thread`           | 200 ok              | None          | _none_                                                                                                                                     |
+| :heavy_check_mark: | `GET`    | `/v1/thread/:id`       | 200 ok              | None          | _none_                                                                                                                                     |
+| :x:                | `POST`   | `/v1/thread`           | 201 created         | Signed in     | `launch_name`<br>`subreddit`<br>`t0`<br>`take_number`<br>`youtube_id`<br>`created_by`<br>`spacex__api_id`                                  |
+| :x:                | `PATCH`  | `/v1/thread/:id`       | 200 ok              | Thread author | `launch_name`<br>`t0`<br>`take_number`<br>`youtube_id`<br>`created_by`<br>`spacex__api_id`                                                 |
+| :x:                | `DELETE` | `/v1/thread/:id`       | 204 no content      | Thread author | _none_                                                                                                                                     |
 
 \* No authentication is required for accessing most data.
 Must be authenticated as a _global admin_ in order to access refresh tokens.
@@ -85,3 +87,9 @@ at which point it will no longer be functional.
 [version]: https://img.shields.io/github/package-json/v/r-spacex/enceladus-api.svg?style=flat-square
 [build]: https://img.shields.io/travis/r-spacex/enceladus-api.svg?style=flat-square
 [docs]: https://r-spacex.github.io/enceladus-api
+
+<style>
+td:nth-child(-n + 2) {
+  text-align: center;
+}
+</style>

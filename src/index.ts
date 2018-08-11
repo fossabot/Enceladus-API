@@ -9,6 +9,7 @@ import winston from 'winston';
 
 import { config } from './config';
 import { body_types } from './middleware/body_types';
+import { assign_user_data, is_global_admin } from './middleware/global_admin';
 import { logger } from './middleware/logging';
 import { router as oauth_endpoints } from './routers/oauth';
 import * as v1 from './routers/v1';
@@ -42,7 +43,11 @@ create_connection({
 
   // require valid JWT to continue
   app.use(jwt({ secret: config.jwt_secret }));
-  // other routes here
+  app.use(assign_user_data); // this way we don't have to query the database multiple times per user
+
+  // require global admin to continue
+  app.use(is_global_admin);
+  app.use(v1.global_admin.routes()).use(v1.global_admin.allowedMethods());
 
   app.listen(config.port);
   console.log(`Server listening on port ${config.port}`);
