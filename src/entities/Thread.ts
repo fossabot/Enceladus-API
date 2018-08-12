@@ -13,10 +13,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Queryable } from './Queryable';
+import { Queryable, Section, User } from '.';
 // import { sockets as io_namespace } from '../sockets';
-import Section from './Section';
-import User from './User';
 
 interface ThreadFields {
   [key: string]: unknown;

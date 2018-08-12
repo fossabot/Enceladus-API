@@ -1,6 +1,6 @@
 import { DeleteResult } from 'typeorm';
 
-export interface Queryable {
+export default interface Queryable {
   // find_all(): any; // : Promise<Queryable[]>;
   // find(id: number): Promise<Queryable>;
   update(fields: object): this;

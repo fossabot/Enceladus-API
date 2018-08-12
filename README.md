@@ -53,7 +53,7 @@ and have the appropriate authentication checks in place.
 | :x:                | `DELETE` | `/v1/section/:id`      | 501 not implemented | TBD           | TBD                                                                                                                                        |
 | :heavy_check_mark: | `GET`    | `/v1/thread`           | 200 ok              | None          | _none_                                                                                                                                     |
 | :heavy_check_mark: | `GET`    | `/v1/thread/:id`       | 200 ok              | None          | _none_                                                                                                                                     |
-| :x:                | `POST`   | `/v1/thread`           | 201 created         | Signed in     | `launch_name`<br>`subreddit`<br>`t0`<br>`take_number`<br>`youtube_id`<br>`created_by`<br>`spacex__api_id`                                  |
+| :heavy_check_mark: | `POST`   | `/v1/thread`           | 201 created         | Signed in     | `launch_name`<br>`subreddit`<br>`t0`<br>`take_number`<br>`youtube_id`<br>`created_by`<br>`spacex__api_id`                                  |
 | :x:                | `PATCH`  | `/v1/thread/:id`       | 200 ok              | Thread author | `launch_name`<br>`t0`<br>`take_number`<br>`youtube_id`<br>`created_by`<br>`spacex__api_id`                                                 |
 | :x:                | `DELETE` | `/v1/thread/:id`       | 204 no content      | Thread author | _none_                                                                                                                                     |
 
@@ -87,9 +87,3 @@ at which point it will no longer be functional.
 [version]: https://img.shields.io/github/package-json/v/r-spacex/enceladus-api.svg?style=flat-square
 [build]: https://img.shields.io/travis/r-spacex/enceladus-api.svg?style=flat-square
 [docs]: https://r-spacex.github.io/enceladus-api
-
-<style>
-td:nth-child(-n + 2) {
-  text-align: center;
-}
-</style>

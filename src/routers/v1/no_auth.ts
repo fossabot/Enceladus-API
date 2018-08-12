@@ -7,7 +7,7 @@ import {
 import STATUS from '../../helpers/status_codes';
 
 /**
- * router with **no authentication required**
+ * router requiring _no authentication_
  */
 export const router = new Router({ prefix: '/v1' });
 
@@ -24,7 +24,6 @@ router.get('/preset_event/:id', preset_event.get);
 
 router.get('/thread', thread.get_all);
 router.get('/thread/:id', thread.get);
-router.post('/thread', thread.create);
 router.patch('/thread/:id', thread.update);
 router.delete('/thread/:id', thread.remove);
 

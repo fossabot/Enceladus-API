@@ -12,10 +12,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Queryable } from './Queryable';
+import { Queryable, Section, Thread } from '.';
 // import { sockets as io_namespace } from '../sockets';
-import Section from './Section';
-import Thread from './Thread';
 
 interface UserFields {
   reddit_username?: string;

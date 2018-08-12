@@ -2,7 +2,7 @@ import Router from 'koa-router';
 import { preset_event, user } from '../../controller';
 
 /**
- * router requiring global admin authentication
+ * router requiring _global admin_ authentication
  */
 export const router = new Router({ prefix: '/v1' });
 

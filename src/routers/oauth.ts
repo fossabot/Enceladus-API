@@ -4,7 +4,7 @@ import Reddit from 'orangered';
 import { config } from '../config';
 import STATUS from '../helpers/status_codes';
 
-import User from '../entities/User';
+import { User } from '../entities';
 
 export const router = new Router();
 
