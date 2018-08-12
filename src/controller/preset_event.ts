@@ -1,4 +1,3 @@
-import once from 'lodash/once';
 import PresetEvent from '../entities/PresetEvent';
 import { BaseContext } from '../helpers/BaseContext';
 import { created, error, okay } from '../helpers/method_binds';
@@ -36,6 +35,6 @@ export async function remove(ctx: BaseContext) {
   await PresetEvent
     .find(ctx.params.id)
     .then(preset_event => preset_event.delete())
-    .then(once(() => ctx.status = STATUS.NO_CONTENT))
+    .then(() => ctx.status = STATUS.NO_CONTENT)
     .catch(error.bind(ctx));
 }

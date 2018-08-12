@@ -1,4 +1,3 @@
-import once from 'lodash/once';
 import User from '../entities/User';
 import { BaseContext } from '../helpers/BaseContext';
 import { created, error, okay } from '../helpers/method_binds';
@@ -36,6 +35,6 @@ export async function remove(ctx: BaseContext) {
   await User
     .find(ctx.params.id)
     .then(user => user.delete())
-    .then(once(() => ctx.status = STATUS.NO_CONTENT))
+    .then(() => ctx.status = STATUS.NO_CONTENT)
     .catch(error.bind(ctx));
 }
