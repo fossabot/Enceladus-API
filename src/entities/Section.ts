@@ -5,7 +5,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 // import { sockets as io_namespace } from '../sockets';
-import { Event, Thread, User } from '.';
+import Event from './Event';
+import Thread from './Thread';
+import User from './User';
 
 interface SectionFields {
   content?: string;

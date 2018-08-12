@@ -28,8 +28,8 @@ create_connection({
   const app = new Koa();
 
   // not really necessary, but allows for more self-documenting code
-  const minimum_authentication = app.use;
-  const middleware = app.use;
+  const minimum_authentication = app.use.bind(app);
+  const middleware = app.use.bind(app);
 
   // sockets.event.attach(app);
   // sockets.preset_event.attach(app);

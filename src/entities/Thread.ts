@@ -13,7 +13,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Queryable, Section, User } from '.';
+import Queryable from './Queryable';
+import Section from './Section';
+import User from './User';
 // import { sockets as io_namespace } from '../sockets';
 
 interface ThreadFields {

@@ -12,7 +12,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Queryable, Section, Thread } from '.';
+import Queryable from './Queryable';
+import Section from './Section';
+import Thread from './Thread';
 // import { sockets as io_namespace } from '../sockets';
 
 interface UserFields {

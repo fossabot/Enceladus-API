@@ -11,7 +11,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { Queryable } from '.';
+import Queryable from './Queryable';
 // import { sockets as io_namespace } from '../sockets';
 
 interface PresetEventFields {

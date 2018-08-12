@@ -5,7 +5,7 @@ import {
   /* AfterInsert, AfterRemove, AfterUpdate,*/ Column, Entity, ManyToOne, PrimaryGeneratedColumn,
 } from 'typeorm';
 // import { sockets as io_namespace } from '../sockets';
-import { Section } from '.';
+import Section from './Section';
 
 interface EventFields {
   message?: string;
