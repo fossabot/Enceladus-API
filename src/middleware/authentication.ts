@@ -1,10 +1,14 @@
+import jwt from 'koa-jwt';
 import pick from 'lodash/pick';
 import { getManager } from 'typeorm';
+import { config } from '../config';
 import User from '../entities/User';
 import { BaseContext } from '../helpers/BaseContext';
 import STATUS from '../helpers/status_codes';
 
-export async function assign_user_data(ctx: BaseContext, next: () => Promise<unknown>) {
+const authenticated = jwt({ secret: config.jwt_secret });
+
+async function assign_user_data(ctx: BaseContext, next: () => Promise<unknown>) {
   const reddit_username = ctx.state.user!.user;
 
   // we can safely tell the compiler that this is _not_ undefined,
@@ -23,7 +27,7 @@ export async function assign_user_data(ctx: BaseContext, next: () => Promise<unk
   await next();
 }
 
-export async function is_global_admin(ctx: BaseContext, next: () => Promise<unknown>) {
+async function global_admin(ctx: BaseContext, next: () => Promise<unknown>) {
   if (ctx.state.user_data!.is_global_admin !== true) {
     ctx.throw(
       STATUS.UNAUTHORIZED,
@@ -33,3 +37,6 @@ export async function is_global_admin(ctx: BaseContext, next: () => Promise<unkn
 
   await next();
 }
+
+export const is_authenticated = [authenticated, assign_user_data];
+export const is_global_admin = [authenticated, assign_user_data, global_admin];

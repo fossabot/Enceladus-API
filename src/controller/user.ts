@@ -9,8 +9,7 @@ export async function get_all(ctx: BaseContext) {
 }
 
 export async function get(ctx: BaseContext) {
-  await User
-    .find(ctx.query.id)
+  await User.find(ctx.query.id)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
@@ -23,8 +22,7 @@ export async function create(ctx: BaseContext) {
 }
 
 export async function update(ctx: BaseContext) {
-  await User
-    .find(ctx.params.id)
+  await User.find(ctx.params.id)
     .then(user => user.update(ctx.request.body))
     .then(user => user.save())
     .then(okay.bind(ctx))
@@ -32,9 +30,8 @@ export async function update(ctx: BaseContext) {
 }
 
 export async function remove(ctx: BaseContext) {
-  await User
-    .find(ctx.params.id)
+  await User.find(ctx.params.id)
     .then(user => user.delete())
-    .then(() => ctx.status = STATUS.NO_CONTENT)
+    .then(() => (ctx.status = STATUS.NO_CONTENT))
     .catch(error.bind(ctx));
 }

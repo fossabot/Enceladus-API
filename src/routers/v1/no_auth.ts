@@ -1,15 +1,11 @@
 import Router from 'koa-router';
-import {
-  preset_event,
-  thread,
-  user,
-} from '../../controller';
+import { preset_event, thread, user } from '../../controller';
 import STATUS from '../../helpers/status_codes';
 
 /**
  * router requiring _no authentication_
  */
-export const router = new Router({ prefix: '/v1' });
+export const router = new Router();
 
 // TODO welcome page
 router.get('/', ctx => ctx.status = STATUS.NOT_IMPLEMENTED);
