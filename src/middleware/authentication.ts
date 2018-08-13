@@ -38,7 +38,7 @@ async function assign_data(ctx: BaseContext, next: () => Promise<unknown>) {
 }
 
 function global_admin(ctx: BaseContext, next: () => Promise<unknown>) {
-  if (ctx.state.user_data!.is_global_admin !== true) {
+  if (get(ctx, 'state.user_data.is_global_admin') !== true) {
     ctx.throw(
       STATUS.UNAUTHORIZED,
       'Must be authenticated as a global admin to access this endpoint.',

@@ -10,7 +10,7 @@ export async function get_all(ctx: BaseContext) {
 
 export function get(ctx: BaseContext) {
   return PresetEvent
-    .find(ctx.query.id)
+    .find(ctx.params.id)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }

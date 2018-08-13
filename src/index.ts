@@ -37,11 +37,6 @@ create_connection({
     app.use(body_parser());
     app.use(body_types);
 
-    app
-      .use(v1.attempted_auth.routes())
-      .use(v1.attempted_auth.allowedMethods())
-      .use(v1.attempted_auth.middleware());
-
     [
       oauth_endpoints,
       v1.no_auth,
@@ -51,8 +46,8 @@ create_connection({
     ].forEach(router => {
       app
         .use(router.routes())
-        .use(router.allowedMethods());
-        // .use(router.middleware());
+        .use(router.allowedMethods())
+        .use(router.middleware());
     });
 
     app.listen(config.port);
