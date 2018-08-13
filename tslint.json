@@ -1,28 +1,24 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "rules": {
+    "max-line-length": { "options": [100] },
+    "quotemark": { "options": ["single", "avoid-escape"] },
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-snake-case",
+      "allow-pascal-case"
     ],
-    "rules": {
-        "max-line-length": { "options": [100] },
-        "quotemark": { "options": ["single", "avoid-escape"] },
-        "variable-name": [
-            true,
-            "ban-keywords",
-            "check-format",
-            "allow-leading-underscore",
-            "allow-snake-case",
-            "allow-pascal-case"
-        ],
-        "interface-name": false,
-        "no-console": false,
-        "arrow-parens": false,
-        "object-literal-sort-keys": false
-    },
-    "linterOptions": {
-        "exclude": [
-            "./dist/**/*",
-            "./node_modules/**/*"
-        ]
-    }
+    "interface-name": false,
+    "no-console": false,
+    "arrow-parens": false,
+    "object-literal-sort-keys": false,
+    "trailing-comma": [true, { "esSpecCompliant": true }]
+  },
+  "linterOptions": {
+    "exclude": ["./dist/**/*", "./node_modules/**/*"]
+  }
 }

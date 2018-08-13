@@ -8,15 +8,15 @@ export async function get_all(ctx: BaseContext) {
   ctx.status = STATUS.OK;
 }
 
-export async function get(ctx: BaseContext) {
-  await Thread
+export function get(ctx: BaseContext) {
+  return Thread
     .find(ctx.query.id)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
 
-export async function create(ctx: BaseContext) {
-  await Thread
+export function create(ctx: BaseContext) {
+  return Thread
     .new(ctx.request.body)
     .then(thread => thread.save())
     .then(created.bind(ctx))
@@ -25,8 +25,8 @@ export async function create(ctx: BaseContext) {
 
 // TODO SECURITY — need to ensure `created_by` is the same as the requesting user
 // UNLESS the requesting user is a local or global admin in their relevant subreddit
-export async function update(ctx: BaseContext) {
-  await Thread
+export function update(ctx: BaseContext) {
+  return Thread
     .find(ctx.params.id)
     .then(thread => thread.update(ctx.request.body))
     .then(thread => thread.save())
@@ -36,8 +36,8 @@ export async function update(ctx: BaseContext) {
 
 // TODO SECURITY — need to ensure `created_by` is the same as the requesting user
 // UNLESS the requesting user is a local or global admin in their relevant subreddit
-export async function remove(ctx: BaseContext) {
-  await Thread
+export function remove(ctx: BaseContext) {
+  return Thread
     .find(ctx.params.id)
     .then(thread => thread.delete())
     .then(() => ctx.status = STATUS.NO_CONTENT)

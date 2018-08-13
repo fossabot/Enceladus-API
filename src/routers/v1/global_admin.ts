@@ -5,11 +5,7 @@ import { is_global_admin } from '../../middleware/authentication';
 /**
  * router requiring _global admin_ authentication
  */
-export const router = new Router().use(...is_global_admin);
-
-// FIXME these only need authentication if you need the refresh token
-router.get('/user', user.get_all);
-router.get('/user/:id', user.get);
+export const router = new Router({ prefix: '/v1' }).use(...is_global_admin);
 
 router.post('/user', user.create);
 router.patch('/user/:id', user.update);

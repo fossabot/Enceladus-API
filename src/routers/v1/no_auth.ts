@@ -5,7 +5,7 @@ import STATUS from '../../helpers/status_codes';
 /**
  * router requiring _no authentication_
  */
-export const router = new Router();
+export const router = new Router({ prefix: '/v1' });
 
 // TODO welcome page
 router.get('/', ctx => ctx.status = STATUS.NOT_IMPLEMENTED);

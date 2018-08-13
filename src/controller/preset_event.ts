@@ -8,22 +8,22 @@ export async function get_all(ctx: BaseContext) {
   ctx.status = STATUS.OK;
 }
 
-export async function get(ctx: BaseContext) {
-  await PresetEvent
+export function get(ctx: BaseContext) {
+  return PresetEvent
     .find(ctx.query.id)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
 
-export async function create(ctx: BaseContext) {
-  await new PresetEvent(ctx.request.body)
+export function create(ctx: BaseContext) {
+  return new PresetEvent(ctx.request.body)
     .save()
     .then(created.bind(ctx))
     .catch(error.bind(ctx));
 }
 
-export async function update(ctx: BaseContext) {
-  await PresetEvent
+export function update(ctx: BaseContext) {
+  return PresetEvent
     .find(ctx.params.id)
     .then(preset_event => preset_event.update(ctx.request.body))
     .then(preset_event => preset_event.save())
@@ -31,8 +31,8 @@ export async function update(ctx: BaseContext) {
     .catch(error.bind(ctx));
 }
 
-export async function remove(ctx: BaseContext) {
-  await PresetEvent
+export function remove(ctx: BaseContext) {
+  return PresetEvent
     .find(ctx.params.id)
     .then(preset_event => preset_event.delete())
     .then(() => ctx.status = STATUS.NO_CONTENT)
