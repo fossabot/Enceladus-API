@@ -1,6 +1,7 @@
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import property from 'lodash/property';
+import memoize from 'memoizee';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -26,13 +27,13 @@ interface EventFields {
 
 @Entity()
 export default class Event implements EventFields, Queryable {
+  @memoize public static get repository() { return getManager().getRepository(Event); }
+
   public static async find(id: number, joins?: { section?: boolean }): Promise<Event> {
     const options: FindOneOptions = { relations: [] };
     if (joins && joins.section) { options.relations!.push('belongs_to_section'); }
 
-    const event = await getManager()
-      .getRepository(Event)
-      .findOne(id, options);
+    const event = await Event.repository.findOne(id, options);
 
     if (event === undefined) {
       throw new Error('Event not found');
@@ -44,9 +45,7 @@ export default class Event implements EventFields, Queryable {
     const options: FindManyOptions = { relations: [] };
     if (joins && joins.section) { options.relations!.push('belongs_to_section'); }
 
-    return getManager()
-      .getRepository(Event)
-      .find(options);
+    return Event.repository.find(options);
   }
 
   @PrimaryGeneratedColumn() public id: number;
@@ -64,15 +63,11 @@ export default class Event implements EventFields, Queryable {
   }
 
   public delete(): Promise<DeleteResult> {
-    return getManager()
-      .getRepository(Event)
-      .delete(this.id);
+    return Event.repository.delete(this.id);
   }
 
   public save(): Promise<this> {
-    return getManager()
-      .getRepository(Event)
-      .save(this);
+    return Event.repository.save(this);
   }
 
   // @AfterInsert() protected emit_insert() {

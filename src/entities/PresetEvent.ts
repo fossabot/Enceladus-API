@@ -1,5 +1,6 @@
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
+import memoize from 'memoizee';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -23,10 +24,10 @@ interface PresetEventFields {
 @Entity()
 @Unique(['name'])
 export default class PresetEvent implements PresetEventFields, Queryable {
+  @memoize public static get repository() { return getManager().getRepository(PresetEvent); }
+
   public static async find(id: number): Promise<PresetEvent> {
-    const preset_event = await getManager()
-      .getRepository(PresetEvent)
-      .findOne(id);
+    const preset_event = await PresetEvent.repository.findOne(id);
 
     if (preset_event === undefined) {
       throw new Error('Preset event not found');
@@ -35,9 +36,7 @@ export default class PresetEvent implements PresetEventFields, Queryable {
   }
 
   public static find_all(): Promise<PresetEvent[]> {
-    return getManager()
-      .getRepository(PresetEvent)
-      .find();
+    return PresetEvent.repository.find();
   }
 
   @PrimaryGeneratedColumn() public id: number;
@@ -59,9 +58,7 @@ export default class PresetEvent implements PresetEventFields, Queryable {
   }
 
   public delete(): Promise<DeleteResult> {
-    return getManager()
-      .getRepository(PresetEvent)
-      .delete(this.id);
+    return PresetEvent.repository.delete(this.id);
   }
 
   public save(): Promise<this> {

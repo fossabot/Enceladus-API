@@ -1,6 +1,7 @@
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import property from 'lodash/property';
+import memoize from 'memoizee';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -36,6 +37,8 @@ interface ThreadFields {
 
 @Entity()
 export default class Thread implements ThreadFields, Queryable {
+  @memoize public static get repository() { return getManager().getRepository(Thread); }
+
   public static async find(
     id: number,
     joins?: { user?: boolean, sections?: boolean },
@@ -44,9 +47,7 @@ export default class Thread implements ThreadFields, Queryable {
     if (joins && joins.user) { options.relations!.push('created_by'); }
     if (joins && joins.sections) { options.relations!.push('sections'); }
 
-    const thread = await getManager()
-      .getRepository(Thread)
-      .findOne(id, options);
+    const thread = await Thread.repository.findOne(id, options);
 
     if (thread === undefined) {
       throw new Error('Thread not found');
@@ -59,9 +60,7 @@ export default class Thread implements ThreadFields, Queryable {
     if (joins && joins.user) { options.relations!.push('created_by'); }
     if (joins && joins.sections) { options.relations!.push('sections'); }
 
-    return getManager()
-      .getRepository(Thread)
-      .find(options);
+    return Thread.repository.find(options);
   }
 
   @PrimaryGeneratedColumn() public id: number;
@@ -118,15 +117,11 @@ export default class Thread implements ThreadFields, Queryable {
   }
 
   public delete(): Promise<DeleteResult> {
-    return getManager()
-      .getRepository(Thread)
-      .delete(this.id);
+    return Thread.repository.delete(this.id);
   }
 
   public save(): Promise<this> {
-    return getManager()
-      .getRepository(Thread)
-      .save(this);
+    return Thread.repository.save(this);
   }
 
   // @AfterInsert() protected emit_insert() {

@@ -1,5 +1,6 @@
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
+import memoize from 'memoizee';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -26,6 +27,8 @@ interface SectionFields {
 
 @Entity()
 export default class Section implements SectionFields {
+  @memoize public static get repository() { return getManager().getRepository(Section); }
+
   public static async find(
     id: number,
     joins?: { lock?: boolean, thread?: boolean },
@@ -34,9 +37,7 @@ export default class Section implements SectionFields {
     if (joins && joins.lock) { options.relations!.push('lock_held_by'); }
     if (joins && joins.thread) { options.relations!.push('belongs_to_thread'); }
 
-    const section = await getManager()
-      .getRepository(Section)
-      .findOne(id, options);
+    const section = await Section.repository.findOne(id, options);
 
     if (section === undefined) {
       throw new Error('Section not found');
@@ -49,9 +50,7 @@ export default class Section implements SectionFields {
     if (joins && joins.lock) { options.relations!.push('lock_held_by'); }
     if (joins && joins.thread) { options.relations!.push('belongs_to_thread'); }
 
-    return getManager()
-      .getRepository(Section)
-      .find(options);
+    return Section.repository.find(options);
   }
 
   @PrimaryGeneratedColumn() public id: number;
@@ -70,15 +69,11 @@ export default class Section implements SectionFields {
   }
 
   public delete(): Promise<DeleteResult> {
-    return getManager()
-      .getRepository(Section)
-      .delete(this.id);
+    return Section.repository.delete(this.id);
   }
 
   public save(): Promise<this> {
-    return getManager()
-      .getRepository(Section)
-      .save(this);
+    return Section.repository.save(this);
   }
 
   // @AfterInsert() protected emit_insert() {

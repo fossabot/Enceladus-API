@@ -1,6 +1,7 @@
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import property from 'lodash/property';
+import memoize from 'memoizee';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -31,6 +32,8 @@ interface UserFields {
 
 @Entity()
 export default class User implements UserFields, Queryable {
+  @memoize public static get repository() { return getManager().getRepository(User); }
+
   public static async find(
     id: number,
     joins?: { threads_created?: boolean, section_locks_held?: boolean },
@@ -39,9 +42,7 @@ export default class User implements UserFields, Queryable {
     if (joins && joins.threads_created) { options.relations!.push('threads_created'); }
     if (joins && joins.section_locks_held) { options.relations!.push('section_locks_held'); }
 
-    const user = await getManager()
-      .getRepository(User)
-      .findOne(id, options);
+    const user = await User.repository.findOne(id, options);
 
     if (user === undefined) {
       throw new Error('User not found');
@@ -56,9 +57,7 @@ export default class User implements UserFields, Queryable {
     if (joins && joins.threads_created) { options.relations!.push('threads_created'); }
     if (joins && joins.section_locks_held) { options.relations!.push('section_locks_held'); }
 
-    return getManager()
-      .getRepository(User)
-      .find(options);
+    return User.repository.find(options);
   }
 
   @PrimaryGeneratedColumn() public id: number;
@@ -104,15 +103,11 @@ export default class User implements UserFields, Queryable {
   }
 
   public delete(): Promise<DeleteResult> {
-    return getManager()
-      .getRepository(User)
-      .delete(this.id);
+    return User.repository.delete(this.id);
   }
 
   public save(): Promise<this> {
-    return getManager()
-      .getRepository(User)
-      .save(this);
+    return User.repository.save(this);
   }
 
   // @AfterInsert() protected emit_insert() {
