@@ -8,6 +8,8 @@ import {
   Column,
   DeleteResult,
   Entity,
+  FindManyOptions,
+  FindOneOptions,
   getManager,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -24,10 +26,13 @@ interface EventFields {
 
 @Entity()
 export default class Event implements EventFields, Queryable {
-  public static async find(id: number): Promise<Event> {
+  public static async find(id: number, joins?: { section?: boolean }): Promise<Event> {
+    const options: FindOneOptions = { relations: [] };
+    if (joins && joins.section) { options.relations!.push('belongs_to_section'); }
+
     const event = await getManager()
       .getRepository(Event)
-      .findOne(id);
+      .findOne(id, options);
 
     if (event === undefined) {
       throw new Error('Event not found');
@@ -35,10 +40,13 @@ export default class Event implements EventFields, Queryable {
     return event;
   }
 
-  public static find_all(): Promise<Event[]> {
+  public static find_all(joins?: { section?: boolean }): Promise<Event[]> {
+    const options: FindManyOptions = { relations: [] };
+    if (joins && joins.section) { options.relations!.push('belongs_to_section'); }
+
     return getManager()
       .getRepository(Event)
-      .find();
+      .find(options);
   }
 
   @PrimaryGeneratedColumn() public id: number;

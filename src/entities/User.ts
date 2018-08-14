@@ -8,6 +8,8 @@ import {
   Column,
   DeleteResult,
   Entity,
+  FindManyOptions,
+  FindOneOptions,
   getManager,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -29,10 +31,17 @@ interface UserFields {
 
 @Entity()
 export default class User implements UserFields, Queryable {
-  public static async find(id: number): Promise<User> {
+  public static async find(
+    id: number,
+    joins?: { threads_created?: boolean, section_locks_held?: boolean },
+  ): Promise<User> {
+    const options: FindOneOptions = { relations: [] };
+    if (joins && joins.threads_created) { options.relations!.push('threads_created'); }
+    if (joins && joins.section_locks_held) { options.relations!.push('section_locks_held'); }
+
     const user = await getManager()
       .getRepository(User)
-      .findOne(id);
+      .findOne(id, options);
 
     if (user === undefined) {
       throw new Error('User not found');
@@ -40,10 +49,16 @@ export default class User implements UserFields, Queryable {
     return user;
   }
 
-  public static find_all(): Promise<User[]> {
+  public static find_all(
+    joins?: { threads_created?: boolean, section_locks_held?: boolean },
+  ): Promise<User[]> {
+    const options: FindManyOptions = { relations: [] };
+    if (joins && joins.threads_created) { options.relations!.push('threads_created'); }
+    if (joins && joins.section_locks_held) { options.relations!.push('section_locks_held'); }
+
     return getManager()
       .getRepository(User)
-      .find();
+      .find(options);
   }
 
   @PrimaryGeneratedColumn() public id: number;

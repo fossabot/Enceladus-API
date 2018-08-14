@@ -7,6 +7,8 @@ import {
   Column,
   DeleteResult,
   Entity,
+  FindManyOptions,
+  FindOneOptions,
   getManager,
   ManyToOne,
   OneToMany,
@@ -24,10 +26,17 @@ interface SectionFields {
 
 @Entity()
 export default class Section implements SectionFields {
-  public static async find(id: number): Promise<Section> {
+  public static async find(
+    id: number,
+    joins?: { lock?: boolean, thread?: boolean },
+  ): Promise<Section> {
+    const options: FindOneOptions = { relations: [] };
+    if (joins && joins.lock) { options.relations!.push('lock_held_by'); }
+    if (joins && joins.thread) { options.relations!.push('belongs_to_thread'); }
+
     const section = await getManager()
       .getRepository(Section)
-      .findOne(id);
+      .findOne(id, options);
 
     if (section === undefined) {
       throw new Error('Section not found');
@@ -35,10 +44,14 @@ export default class Section implements SectionFields {
     return section;
   }
 
-  public static find_all(): Promise<Section[]> {
+  public static find_all(joins?: { lock?: boolean, thread?: boolean }): Promise<Section[]> {
+    const options: FindManyOptions = { relations: [] };
+    if (joins && joins.lock) { options.relations!.push('lock_held_by'); }
+    if (joins && joins.thread) { options.relations!.push('belongs_to_thread'); }
+
     return getManager()
       .getRepository(Section)
-      .find();
+      .find(options);
   }
 
   @PrimaryGeneratedColumn() public id: number;

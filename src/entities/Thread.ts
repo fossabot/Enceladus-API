@@ -8,6 +8,7 @@ import {
   Column,
   DeleteResult,
   Entity,
+  FindManyOptions,
   FindOneOptions,
   getManager,
   ManyToOne,
@@ -39,13 +40,13 @@ export default class Thread implements ThreadFields, Queryable {
     id: number,
     joins?: { user?: boolean, sections?: boolean },
   ): Promise<Thread> {
-    const relations: FindOneOptions = { relations: [] };
-    if (joins && joins.user) { relations.relations!.push('created_by'); }
-    if (joins && joins.sections) { relations.relations!.push('sections'); }
+    const options: FindOneOptions = { relations: [] };
+    if (joins && joins.user) { options.relations!.push('created_by'); }
+    if (joins && joins.sections) { options.relations!.push('sections'); }
 
     const thread = await getManager()
       .getRepository(Thread)
-      .findOne(id, relations);
+      .findOne(id, options);
 
     if (thread === undefined) {
       throw new Error('Thread not found');
@@ -53,10 +54,14 @@ export default class Thread implements ThreadFields, Queryable {
     return thread;
   }
 
-  public static find_all(): Promise<Thread[]> {
+  public static find_all(joins?: { user?: boolean, sections?: boolean }): Promise<Thread[]> {
+    const options: FindManyOptions = { relations: [] };
+    if (joins && joins.user) { options.relations!.push('created_by'); }
+    if (joins && joins.sections) { options.relations!.push('sections'); }
+
     return getManager()
       .getRepository(Thread)
-      .find();
+      .find(options);
   }
 
   @PrimaryGeneratedColumn() public id: number;
