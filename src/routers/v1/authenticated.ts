@@ -8,3 +8,5 @@ import { is_authenticated } from '../../middleware/authentication';
 export const router = new Router({ prefix: '/v1' }).use(...is_authenticated);
 
 router.post('/thread', thread.create);
+router.patch('/thread/:id', thread.update);
+router.delete('/thread/:id', thread.remove);

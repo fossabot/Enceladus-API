@@ -9,6 +9,7 @@ export type BaseContext = BaseContext & {
       spacex__is_admin: boolean;
       spacex__is_mod: boolean;
       spacex__is_slack_member: boolean;
+      username: string;
     };
   };
 };

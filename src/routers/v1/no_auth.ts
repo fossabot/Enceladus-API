@@ -22,10 +22,6 @@ router.get('/preset_event/:id', preset_event.get);
 router.get('/thread', thread.get_all);
 router.get('/thread/:id', thread.get);
 
-// FIXME authentication is needed for routes below
-router.patch('/thread/:id', thread.update);
-router.delete('/thread/:id', thread.remove);
-
 [
   'event',
   'section',

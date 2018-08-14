@@ -8,6 +8,7 @@ import {
   Column,
   DeleteResult,
   Entity,
+  FindOneOptions,
   getManager,
   ManyToOne,
   OneToMany,
@@ -29,16 +30,22 @@ interface ThreadFields {
   youtube_id?: string | null;
   spacex__api_id?: string | null;
   created_by?: User;
+  sections?: Section[];
 }
 
 @Entity()
 export default class Thread implements ThreadFields, Queryable {
-  [key: string]: any;
+  public static async find(
+    id: number,
+    joins?: { user?: boolean, sections?: boolean },
+  ): Promise<Thread> {
+    const relations: FindOneOptions = { relations: [] };
+    if (joins && joins.user) { relations.relations!.push('created_by'); }
+    if (joins && joins.sections) { relations.relations!.push('sections'); }
 
-  public static async find(id: number): Promise<Thread> {
     const thread = await getManager()
       .getRepository(Thread)
-      .findOne(id);
+      .findOne(id, relations);
 
     if (thread === undefined) {
       throw new Error('Thread not found');
@@ -71,37 +78,31 @@ export default class Thread implements ThreadFields, Queryable {
    * @constructor
    */
   // tslint:disable-next-line member-ordering
-  public static new(fields: ThreadFields = {}) {
-    return new Promise<Thread>((resolve, reject) => {
+  public static async new(fields: ThreadFields = {}): Promise<Thread> {
       const thread = new Thread();
 
       if (fields.created_by !== undefined) {
-        User.find(fields.created_by.id)
-          .then(created_by => {
-            if (created_by === undefined) {
-              reject('User not found');
-            } else {
-              thread.created_by = created_by;
-            }
-          })
-          .catch(() => reject('User not found'));
+        const user = await User.find(fields.created_by.id);
+
+        if (user === undefined) {
+          throw new Error('User not found');
+        } else {
+          thread.created_by = user;
+        }
       }
 
-      resolve(
-        assign(
-          thread,
-          pick(fields, [
-            'launch_name',
-            'post_id',
-            'subreddit',
-            't0',
-            'take_number',
-            'youtube_id',
-            'spacex__api_id',
-          ]),
-        ),
+      return assign(
+        thread,
+        pick(fields, [
+          'launch_name',
+          'post_id',
+          'subreddit',
+          't0',
+          'take_number',
+          'youtube_id',
+          'spacex__api_id',
+        ]),
       );
-    });
   }
 
   public update(fields: ThreadFields = {}): this {

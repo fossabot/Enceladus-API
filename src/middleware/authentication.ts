@@ -11,28 +11,31 @@ const authenticated = jwt({ secret: config.jwt_secret, key: 'jwt' });
 const auth_passthrough = jwt({ secret: config.jwt_secret, key: 'jwt', passthrough: true });
 
 async function assign_data(ctx: BaseContext, next: () => Promise<unknown>) {
-  const reddit_username: Option<string> = get(ctx, 'state.jwt.user');
+  const username: Option<string> = get(ctx, 'state.jwt.user');
 
   // does not have a valid JWT
-  if (reddit_username === undefined) {
+  if (username === undefined) {
     return next();
   }
 
   const user = await getManager()
     .getRepository(User)
-    .findOne({ reddit_username });
+    .findOne({ reddit_username: username });
 
   // user listed in JWT does not exist
   if (user === undefined) {
     return next();
   }
 
-  ctx.state.user_data = pick(user, [
+  ctx.state.user_data = {
+    ...pick(user, [
     'is_global_admin',
     'spacex__is_admin',
     'spacex__is_mod',
     'spacex__is_slack_member',
-  ]);
+    ]),
+    username,
+  };
 
   return next();
 }
