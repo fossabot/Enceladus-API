@@ -1,7 +1,7 @@
+import once from 'lodash-decorators/once';
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import property from 'lodash/property';
-import memoize from 'memoizee';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -31,13 +31,13 @@ interface ThreadFields {
   take_number?: number;
   youtube_id?: string | null;
   spacex__api_id?: string | null;
-  created_by?: User;
-  sections?: Section[];
+  created_by?: Promise<User>;
+  sections?: Promise<Section[]>;
 }
 
 @Entity()
 export default class Thread implements ThreadFields, Queryable {
-  @memoize public static get repository() { return getManager().getRepository(Thread); }
+  @once public static get repository() { return getManager().getRepository(Thread); }
 
   public static async find(
     id: number,
@@ -70,8 +70,8 @@ export default class Thread implements ThreadFields, Queryable {
   @Column({ type: 'integer', nullable: true }) public t0: number | null;
   @Column() public take_number: number = 1;
   @Column({ type: 'varchar', nullable: true }) public youtube_id: string | null;
-  @OneToMany(() => Section, property('belongs_to_thread')) public sections: Section[];
-  @ManyToOne(() => User, property('threads_created')) public created_by: User;
+  @OneToMany(() => Section, property('belongs_to_thread')) public sections: Promise<Section[]>;
+  @ManyToOne(() => User, property('threads_created')) public created_by: Promise<User>;
   @Column({ type: 'varchar', nullable: true }) public spacex__api_id: string | null;
 
   /**
@@ -86,12 +86,12 @@ export default class Thread implements ThreadFields, Queryable {
       const thread = new Thread();
 
       if (fields.created_by !== undefined) {
-        const user = await User.find(fields.created_by.id);
+        const user = await User.find((await fields.created_by).id);
 
         if (user === undefined) {
           throw new Error('User not found');
         } else {
-          thread.created_by = user;
+          thread.created_by = Promise.resolve(user);
         }
       }
 

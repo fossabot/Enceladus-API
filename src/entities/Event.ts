@@ -1,7 +1,7 @@
+import once from 'lodash-decorators/once';
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import property from 'lodash/property';
-import memoize from 'memoizee';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -23,11 +23,12 @@ interface EventFields {
   message?: string;
   posted?: boolean;
   terminal_count?: string;
+  belongs_to_section?: Promise<Section>;
 }
 
 @Entity()
 export default class Event implements EventFields, Queryable {
-  @memoize public static get repository() { return getManager().getRepository(Event); }
+  @once public static get repository() { return getManager().getRepository(Event); }
 
   public static async find(id: number, joins?: { section?: boolean }): Promise<Event> {
     const options: FindOneOptions = { relations: [] };
@@ -52,7 +53,8 @@ export default class Event implements EventFields, Queryable {
   @Column('text') public message: string = '';
   @Column() public posted: boolean = false;
   @Column() public terminal_count: string = '';
-  @ManyToOne(() => Section, property('events')) public belongs_to_section: Section;
+  @ManyToOne(() => Section, property('events'), { nullable: false })
+    public belongs_to_section: Promise<Section>;
 
   constructor(fields: EventFields = {}) {
     assign(this, pick(fields, ['message', 'posted', 'terminal_count']));

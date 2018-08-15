@@ -29,8 +29,7 @@ export async function update(ctx: BaseContext) {
   await minimum_thread_host(ctx, thread);
 
   try {
-    thread.update(ctx.request.body);
-    thread.save();
+    thread.update(ctx.request.body).save();
     okay.call(ctx, thread);
   } catch (err) {
     error.call(ctx, err);
@@ -51,13 +50,13 @@ export async function remove(ctx: BaseContext) {
 }
 
 // throws an error on ctx if the authenticated user is not the host or an admin
-async function minimum_thread_host(ctx: BaseContext, { subreddit, created_by }: Thread) {
+export async function minimum_thread_host(ctx: BaseContext, { subreddit, created_by }: Thread) {
   const user = ctx.state.user_data!;
 
   if (
    user.is_global_admin !== true &&
    (user as any)[`${subreddit.toLowerCase()}__is_admin`] !== true && // is local admin
-   user.username !== created_by.reddit_username // is thread creator
+   user.username !== (await created_by).reddit_username // is thread creator
   ) {
    ctx.throw(
      STATUS.UNAUTHORIZED,

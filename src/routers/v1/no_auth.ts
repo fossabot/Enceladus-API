@@ -21,12 +21,3 @@ router.get('/preset_event/:id', preset_event.get);
 
 router.get('/thread', thread.get_all);
 router.get('/thread/:id', thread.get);
-
-[
-  'event',
-  'section',
-].forEach(type => {
-  router.post(`/${type}`, ctx => ctx.status = STATUS.NOT_IMPLEMENTED);
-  router.patch(`/${type}/:id`, ctx => ctx.status = STATUS.NOT_IMPLEMENTED);
-  router.delete(`/${type}/:id`, ctx => ctx.status = STATUS.NOT_IMPLEMENTED);
-});

@@ -23,13 +23,21 @@ export function create(ctx: BaseContext) {
     .catch(error.bind(ctx));
 }
 
-export function update(ctx: BaseContext) {
-  return Event
-    .find(ctx.params.id)
-    .then(event => event.update(ctx.request.body))
-    .then(event => event.save())
-    .then(okay.bind(ctx))
-    .catch(error.bind(ctx));
+export async function update(ctx: BaseContext) {
+  const event = await Event.find(ctx.params.id, { section: true });
+  const section = await event.belongs_to_section;
+  const thread = await section.belongs_to_thread;
+
+  console.log(event);
+  console.log(section);
+  console.log(thread);
+
+  try {
+    event.update(ctx.request.body).save();
+    okay.call(ctx, event);
+  } catch (err) {
+    error.call(ctx, err);
+  }
 }
 
 export function remove(ctx: BaseContext) {

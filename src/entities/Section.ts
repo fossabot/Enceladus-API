@@ -1,6 +1,6 @@
+import once from 'lodash-decorators/once';
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
-import memoize from 'memoizee';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -23,11 +23,22 @@ import User from './User';
 interface SectionFields {
   content?: string;
   name?: string;
+  events?: Event[];
+  lock_held_by?: Promise<User>;
+  belongs_to_thread?: Promise<Thread>;
+}
+
+interface SectionFieldsParams {
+  content?: string;
+  name?: string;
+  events?: string; // number[] concatenated by commas
+  lock?: number;
+  thread?: number;
 }
 
 @Entity()
 export default class Section implements SectionFields {
-  @memoize public static get repository() { return getManager().getRepository(Section); }
+  @once public static get repository() { return getManager().getRepository(Section); }
 
   public static async find(
     id: number,
@@ -56,16 +67,39 @@ export default class Section implements SectionFields {
   @PrimaryGeneratedColumn() public id: number;
   @Column('text') public content: string = '';
   @Column() public name: string;
-  @OneToMany(() => Event, event => event.belongs_to_section) public events: Event[];
-  @ManyToOne(() => User, user => user.section_locks_held) public lock_held_by: User;
-  @ManyToOne(() => Thread, thread => thread.sections) public belongs_to_thread: Thread;
+  @OneToMany(() => Event, event => event.belongs_to_section, { nullable: false, eager: true })
+    public events: Event[];
+  @ManyToOne(() => User, user => user.section_locks_held) public lock_held_by: Promise<User>;
+  @ManyToOne(() => Thread, thread => thread.sections, { nullable: false })
+    public belongs_to_thread: Promise<Thread>;
 
-  constructor(fields: SectionFields = {}) {
-    assign(this, pick(fields, ['content', 'name']));
+  // tslint:disable-next-line member-ordering
+  public static async new(fields: SectionFieldsParams = {}): Promise<Section> {
+    const section = new Section();
+
+    assign(section, pick(fields, ['content', 'name']));
+
+    if (fields.thread !== undefined) {
+      console.log(fields.thread);
+      section.belongs_to_thread = Promise.resolve(await Thread.find(fields.thread));
+    }
+
+    return section;
   }
 
-  public update(fields: SectionFields = {}): this {
-    return assign(this, pick(fields, ['content', 'name']));
+  public async update(fields: SectionFieldsParams = {}): Promise<this> {
+    assign(this, pick(fields, ['content', 'name']));
+
+    if (fields.lock !== undefined) {
+      this.lock_held_by = User.find(fields.lock);
+    }
+
+    if (fields.events !== undefined) {
+      const events = fields.events.split(',').map(n => parseInt(n, 10));
+      this.events = await Promise.all(events.map($ => Event.find($)));
+    }
+
+    return this;
   }
 
   public delete(): Promise<DeleteResult> {

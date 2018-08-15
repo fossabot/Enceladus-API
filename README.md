@@ -20,10 +20,10 @@
 
 _Version 1 is in progress,
 and may change at any time without warning._
-Certain endpoints _are_ complete,
+Certain endpoints _are_ functional (not necessarily complete),
 and have the appropriate authentication checks in place.
 
-| Complete?          | Method   | Endpoint               | Expected status     | Min. authn.   | Allowed parameters                                                                                                                         |
+| Functional?        | Method   | Endpoint               | Expected status     | Min. authn.   | Allowed parameters                                                                                                                         |
 | ------------------ | -------- | ---------------------- | ------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | :heavy_check_mark: | `GET`    | `/oauth`               | 200 ok              | None          | `callback`                                                                                                                                 |
 | :heavy_check_mark: | `GET`    | `/oauth/callback`      | 303 see other       | None          | `code`<br>`state`                                                                                                                          |
@@ -44,9 +44,9 @@ and have the appropriate authentication checks in place.
 | :heavy_check_mark: | `DELETE` | `/v1/preset_event/:id` | 204 no content      | Global admin  | _none_                                                                                                                                     |
 | :heavy_check_mark: | `GET`    | `/v1/section`          | 200 ok              | None          | _none_                                                                                                                                     |
 | :heavy_check_mark: | `GET`    | `/v1/section/:id`      | 200 ok              | None          | _none_                                                                                                                                     |
-| :x:                | `POST`   | `/v1/section`          | 501 not implemented | Thread author | TBD                                                                                                                                        |
-| :x:                | `PATCH`  | `/v1/section/:id`      | 501 not implemented | Thread author | TBD                                                                                                                                        |
-| :x:                | `DELETE` | `/v1/section/:id`      | 501 not implemented | Thread author | TBD                                                                                                                                        |
+| :heavy_check_mark: | `POST`   | `/v1/section`          | 201 created         | Thread author | `content`<br>`name`<br>`thread`                                                                                                            |
+| :heavy_check_mark: | `PATCH`  | `/v1/section/:id`      | 200 ok              | Thread author | `content`<br>`name`<br>`lock`<br>`events`                                                                                                  |
+| :heavy_check_mark: | `DELETE` | `/v1/section/:id`      | 204 no content      | Thread author | _none_                                                                                                                                     |
 | :heavy_check_mark: | `GET`    | `/v1/thread`           | 200 ok              | None          | _none_                                                                                                                                     |
 | :heavy_check_mark: | `GET`    | `/v1/thread/:id`       | 200 ok              | None          | _none_                                                                                                                                     |
 | :heavy_check_mark: | `POST`   | `/v1/thread`           | 201 created         | Signed in     | `launch_name`<br>`subreddit`<br>`t0`<br>`take_number`<br>`youtube_id`<br>`created_by`<br>`spacex__api_id`                                  |

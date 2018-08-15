@@ -1,6 +1,6 @@
+import once from 'lodash-decorators/once';
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
-import memoize from 'memoizee';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -24,7 +24,7 @@ interface PresetEventFields {
 @Entity()
 @Unique(['name'])
 export default class PresetEvent implements PresetEventFields, Queryable {
-  @memoize public static get repository() { return getManager().getRepository(PresetEvent); }
+  @once public static get repository() { return getManager().getRepository(PresetEvent); }
 
   public static async find(id: number): Promise<PresetEvent> {
     const preset_event = await PresetEvent.repository.findOne(id);

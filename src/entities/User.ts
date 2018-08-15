@@ -1,7 +1,7 @@
+import once from 'lodash-decorators/once';
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import property from 'lodash/property';
-import memoize from 'memoizee';
 import {
   // AfterInsert,
   // AfterRemove,
@@ -28,11 +28,13 @@ interface UserFields {
   spacex__is_admin?: boolean;
   spacex__is_mod?: boolean;
   spacex__is_slack_member?: boolean;
+  threads_created?: Promise<Thread[]>;
+  section_locks_held?: Promise<Section[]>;
 }
 
 @Entity()
 export default class User implements UserFields, Queryable {
-  @memoize public static get repository() { return getManager().getRepository(User); }
+  @once public static get repository() { return getManager().getRepository(User); }
 
   public static async find(
     id: number,
@@ -68,8 +70,8 @@ export default class User implements UserFields, Queryable {
   @Column() public spacex__is_admin: boolean = false;
   @Column() public spacex__is_mod: boolean = false;
   @Column() public spacex__is_slack_member: boolean = false;
-  @OneToMany(() => Thread, property('created_by')) public threads_created: Thread[];
-  @OneToMany(() => Section, property('lock_held_by')) public section_locks_held: Section[];
+  @OneToMany(() => Thread, property('created_by')) public threads_created: Promise<Thread[]>;
+  @OneToMany(() => Section, property('lock_held_by')) public section_locks_held: Promise<Section[]>;
 
   constructor(fields: UserFields = {}) {
     assign(
