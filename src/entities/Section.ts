@@ -80,7 +80,6 @@ export default class Section implements SectionFields {
     assign(section, pick(fields, ['content', 'name']));
 
     if (fields.thread !== undefined) {
-      console.log(fields.thread);
       section.belongs_to_thread = Promise.resolve(await Thread.find(fields.thread));
     }
 

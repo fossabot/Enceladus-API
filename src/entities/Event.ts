@@ -26,6 +26,13 @@ interface EventFields {
   belongs_to_section?: Promise<Section>;
 }
 
+interface EventFieldsParams {
+  message?: string;
+  posted?: boolean;
+  terminal_count?: string;
+  section?: number;
+}
+
 @Entity()
 export default class Event implements EventFields, Queryable {
   @once public static get repository() { return getManager().getRepository(Event); }
@@ -56,8 +63,17 @@ export default class Event implements EventFields, Queryable {
   @ManyToOne(() => Section, property('events'), { nullable: false })
     public belongs_to_section: Promise<Section>;
 
-  constructor(fields: EventFields = {}) {
-    assign(this, pick(fields, ['message', 'posted', 'terminal_count']));
+  // tslint:disable-next-line member-ordering
+  public static async new(fields: EventFieldsParams = {}): Promise<Event> {
+    const event = new Event();
+
+    assign(event, pick(fields, ['message', 'posted', 'terminal_count']));
+
+    if (fields.section !== undefined) {
+      event.belongs_to_section = Promise.resolve(await Section.find(fields.section));
+    }
+
+    return event;
   }
 
   public update(fields: EventFields = {}): this {

@@ -1,7 +1,13 @@
-import Event from '../entities/Event';
+import omit from 'lodash/omit';
+import { Event, Section } from '../entities';
 import { BaseContext } from '../helpers/BaseContext';
 import { created, error, okay } from '../helpers/method_binds';
 import STATUS from '../helpers/status_codes';
+import { minimum_thread_host } from './thread';
+
+function omit_underscore_props(section: Event): Partial<Event> {
+  return omit(section, '__belongs_to_section__', '__has_belongs_to_section__');
+}
 
 export async function get_all(ctx: BaseContext) {
   ctx.body = await Event.find_all();
@@ -15,35 +21,42 @@ export function get(ctx: BaseContext) {
     .catch(error.bind(ctx));
 }
 
-// TODO additional middleware necessary on routes below
-export function create(ctx: BaseContext) {
-  return new Event(ctx.request.body)
-    .save()
-    .then(created.bind(ctx))
-    .catch(error.bind(ctx));
-}
+export async function create(ctx: BaseContext) {
+  const section = await Section.find(ctx.request.belongs_to_section, { thread: true });
 
-export async function update(ctx: BaseContext) {
-  const event = await Event.find(ctx.params.id, { section: true });
-  const section = await event.belongs_to_section;
-  const thread = await section.belongs_to_thread;
-
-  console.log(event);
-  console.log(section);
-  console.log(thread);
+  await minimum_thread_host(ctx, await section.belongs_to_thread);
 
   try {
-    event.update(ctx.request.body).save();
-    okay.call(ctx, event);
+    const event = await (await Event.new(ctx.request.body)).save();
+    created.call(ctx, omit_underscore_props(event));
   } catch (err) {
     error.call(ctx, err);
   }
 }
 
-export function remove(ctx: BaseContext) {
-  return Event
-    .find(ctx.params.id)
-    .then(event => event.delete())
-    .then(() => ctx.status = STATUS.NO_CONTENT)
-    .catch(error.bind(ctx));
+export async function update(ctx: BaseContext) {
+  const event = await Event.find(ctx.params.id, { section: true });
+
+  await minimum_thread_host(ctx, await (await event.belongs_to_section).belongs_to_thread);
+
+  await event.update(ctx.request.body).save();
+
+  try {
+    okay.call(ctx, omit_underscore_props(event));
+  } catch (err) {
+    error.call(ctx, err);
+  }
+}
+
+export async function remove(ctx: BaseContext) {
+  const event = await Event.find(ctx.params.id, { section: true });
+
+  await minimum_thread_host(ctx, await (await event.belongs_to_section).belongs_to_thread);
+
+  try {
+    event.delete();
+    ctx.status = STATUS.NO_CONTENT;
+  } catch (err) {
+    error.call(ctx, err);
+  }
 }
