@@ -22,7 +22,7 @@ export function logger(winston: typeof Winston) {
     const msg = `${ctx.method} ${ctx.originalUrl} ${ctx.status} ${ms}ms`;
 
     winston.configure({
-      level: config.debug_logging ? 'debug' : 'info',
+      level: config.debug ? 'debug' : 'info',
       transports: [
         new Winston.transports.Console(),
       ],

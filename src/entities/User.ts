@@ -65,7 +65,7 @@ export default class User implements UserFields, Queryable {
   @PrimaryGeneratedColumn() public id: number;
   @Column({ unique: true, readonly: true }) public reddit_username: string;
   @Column() public lang: string;
-  @Column({ readonly: true }) public refresh_token: string;
+  @Column({ readonly: true, select: false }) public refresh_token: string;
   @Column() public is_global_admin: boolean = false;
   @Column() public spacex__is_admin: boolean = false;
   @Column() public spacex__is_mod: boolean = false;

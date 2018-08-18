@@ -1,5 +1,5 @@
 import Router from 'koa-router';
-import { event, preset_event, section, thread } from '../../controller';
+import { event, preset_event, section, thread, user } from '../../controller';
 import STATUS from '../../helpers/status_codes';
 
 /**
@@ -9,6 +9,9 @@ export const router = new Router({ prefix: '/v1' });
 
 // TODO welcome page
 router.get('/', ctx => ctx.status = STATUS.NOT_IMPLEMENTED);
+
+router.get('/user', user.get_all);
+router.get('/user/:id', user.get);
 
 router.get('/event', event.get_all);
 router.get('/event/:id', event.get);

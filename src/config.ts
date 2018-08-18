@@ -1,5 +1,5 @@
 export const config = Object.freeze({
-  debug_logging: process.env.NODE_ENV === 'development',
+  debug: process.env.NODE_ENV === 'development',
   jwt_secret: process.env.JWT_SECRET || '',
   port: parseInt(process.env.PORT || '3000', 10),
 

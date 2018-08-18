@@ -5,24 +5,12 @@ import { created, error, okay } from '../helpers/method_binds';
 import STATUS from '../helpers/status_codes';
 
 export async function get_all(ctx: BaseContext) {
-  const users = await User.find_all();
-
-  if (_get(ctx, 'state.user_data.is_global_admin') !== true) {
-    users.forEach(user => delete user.refresh_token);
-  }
-
-  ctx.body = users;
+  ctx.body = await User.find_all();
   ctx.status = STATUS.OK;
 }
 
 export function get(ctx: BaseContext) {
   return User.find(ctx.params.id)
-    .then(user => {
-      if (_get(ctx, 'state.user_data.is_global_admin') !== true) {
-        delete user.refresh_token;
-      }
-      return user;
-    })
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
