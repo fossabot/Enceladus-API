@@ -1,0 +1,499 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Enceladus API</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">Enceladus API</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> Enceladus API</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="enceladus-api">Enceladus API</h1>
+				<p><a href="https://r-spacex.github.io/enceladus-api">Documentation</a></p>
+				<p><img src="https://img.shields.io/github/license/r-spacex/enceladus-api.svg?style=flat-square" alt="License">
+					<img src="https://img.shields.io/github/package-json/v/r-spacex/enceladus-api.svg?style=flat-square" alt="Version">
+				<img src="https://img.shields.io/travis/r-spacex/enceladus-api.svg?style=flat-square" alt="Build"></p>
+				<h2 id="endpoints">Endpoints</h2>
+				<h3 id="authentication-hierarchy">Authentication hierarchy</h3>
+				<ul>
+					<li>None</li>
+					<li>Signed in</li>
+					<li>Thread author</li>
+					<li>Local admin (subreddit-specific)</li>
+					<li>Global admin</li>
+				</ul>
+				<h3 id="version-1">Version 1</h3>
+				<p><em>Version 1 is in progress,
+					and may change at any time without warning.</em>
+					Certain endpoints <em>are</em> functional (not necessarily complete),
+				and have the appropriate authentication checks in place.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Functional?</th>
+							<th>Method</th>
+							<th>Endpoint</th>
+							<th>Expected status</th>
+							<th>Min. authn.</th>
+							<th>Allowed parameters</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/oauth</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><code>callback</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/oauth/callback</code></td>
+							<td>303 see other</td>
+							<td>None</td>
+							<td><code>code</code><br><code>state</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/v1/user</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/v1/user/:id</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>POST</code>†</td>
+							<td><code>/v1/user</code></td>
+							<td>201 created</td>
+							<td>None</td>
+							<td><code>reddit_username</code><br><code>lang</code><br><code>refresh_token</code><br><code>is_global_admin</code><br><code>spacex__is_admin</code><br><code>spacex__is_mod</code><br><code>spacex__is_slack_member</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>PATCH</code>†</td>
+							<td><code>/v1/user/:id</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><code>lang</code><br><code>refresh_token</code><br><code>is_global_admin</code><br><code>spacex__is_admin</code><br><code>spacex__is_mod</code><br><code>spacex__is_slack_member</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>DELETE</code>†</td>
+							<td><code>/v1/user/:id</code></td>
+							<td>204 no content</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/v1/event</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/v1/event/:id</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>POST</code></td>
+							<td><code>/v1/event</code></td>
+							<td>201 created</td>
+							<td>Thread author</td>
+							<td><code>message</code><br><code>posted</code><br><code>terminal_count</code><br><code>section</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>PATCH</code></td>
+							<td><code>/v1/event/:id</code></td>
+							<td>200 ok</td>
+							<td>Thread author</td>
+							<td><code>message</code><br><code>posted</code><br><code>terminal_count</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>DELETE</code></td>
+							<td><code>/v1/event/:id</code></td>
+							<td>204 no content</td>
+							<td>Thread author</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/v1/preset_event</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/v1/preset_event/:id</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>POST</code></td>
+							<td><code>/v1/preset_event</code></td>
+							<td>201 created</td>
+							<td>Global admin</td>
+							<td><code>holds_clock</code><br><code>message</code><br><code>name</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>PATCH</code></td>
+							<td><code>/v1/preset_event/:id</code></td>
+							<td>200 ok</td>
+							<td>Global admin</td>
+							<td><code>holds_clock</code><br><code>message</code><br><code>name</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>DELETE</code></td>
+							<td><code>/v1/preset_event/:id</code></td>
+							<td>204 no content</td>
+							<td>Global admin</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/v1/section</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/v1/section/:id</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>POST</code></td>
+							<td><code>/v1/section</code></td>
+							<td>201 created</td>
+							<td>Thread author</td>
+							<td><code>content</code><br><code>name</code><br><code>thread</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>PATCH</code></td>
+							<td><code>/v1/section/:id</code></td>
+							<td>200 ok</td>
+							<td>Thread author</td>
+							<td><code>content</code><br><code>name</code><br><code>lock</code><br><code>events</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>DELETE</code></td>
+							<td><code>/v1/section/:id</code></td>
+							<td>204 no content</td>
+							<td>Thread author</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/v1/thread</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>GET</code></td>
+							<td><code>/v1/thread/:id</code></td>
+							<td>200 ok</td>
+							<td>None</td>
+							<td><em>none</em></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>POST</code></td>
+							<td><code>/v1/thread</code></td>
+							<td>201 created</td>
+							<td>Signed in</td>
+							<td><code>launch_name</code><br><code>subreddit</code><br><code>t0</code><br><code>take_number</code><br><code>youtube_id</code><br><code>created_by</code><br><code>spacex__api_id</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>PATCH</code></td>
+							<td><code>/v1/thread/:id</code></td>
+							<td>200 ok</td>
+							<td>Thread author</td>
+							<td><code>launch_name</code><br><code>t0</code><br><code>take_number</code><br><code>youtube_id</code><br><code>created_by</code><br><code>spacex__api_id</code></td>
+						</tr>
+						<tr>
+							<td>:heavy_check_mark:</td>
+							<td><code>DELETE</code></td>
+							<td><code>/v1/thread/:id</code></td>
+							<td>204 no content</td>
+							<td>Thread author</td>
+							<td><em>none</em></td>
+						</tr>
+					</tbody>
+				</table>
+				<p>† These endpoints are only available when in the development environment.
+				When in production, these endpoints will return a 404.</p>
+				<h2 id="authentication-flow">Authentication flow</h2>
+				<p>To authenticate a user,
+					you should make a GET request to <code>/oauth</code>,
+					with the URL parameter <code>callback</code>.
+					The callback provided will be called with a URL parameter <code>token</code> upon success.
+					That token contains the user&#39;s reddit username,
+				and should be passed in the headers to authenticate the user for the appropriate endpoints.</p>
+				<h2 id="policy-on-breaking-changes">Policy on breaking changes</h2>
+				<p><em>This section will take effect after the first stable release.</em></p>
+				<p>This API follows <a href="https://semver.org">semantic versioning</a>.
+				As such, all breaking changes will bump the major version.</p>
+				<p>To ensure stability among all implementations using the API,
+					the most recent release of the prior version will be fully supported for one month,
+					including updates, bug fixes, and any other open issues.
+					There will be at least two months from the breaking change until the prior version&#39;s endpoints are removed,
+				at which point it will no longer be functional.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_globals_d_.html">"globals.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_config_.html">"src/config"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_controller_event_.html">"src/controller/event"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_controller_index_.html">"src/controller/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_controller_preset_event_.html">"src/controller/preset_<wbr>event"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_controller_section_.html">"src/controller/section"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_controller_thread_.html">"src/controller/thread"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_controller_user_.html">"src/controller/user"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_entities_event_.html">"src/entities/<wbr>Event"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_entities_presetevent_.html">"src/entities/<wbr>Preset<wbr>Event"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_entities_queryable_.html">"src/entities/<wbr>Queryable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_entities_section_.html">"src/entities/<wbr>Section"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_entities_thread_.html">"src/entities/<wbr>Thread"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_entities_user_.html">"src/entities/<wbr>User"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_entities_index_.html">"src/entities/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_helpers_basecontext_.html">"src/helpers/<wbr>Base<wbr>Context"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_helpers_method_binds_.html">"src/helpers/method_<wbr>binds"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_helpers_status_codes_.html">"src/helpers/status_<wbr>codes"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_index_.html">"src/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_middleware_authentication_.html">"src/middleware/authentication"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_middleware_body_types_.html">"src/middleware/body_<wbr>types"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_middleware_logging_.html">"src/middleware/logging"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_reddit_.html">"src/reddit"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_routers_oauth_.html">"src/routers/oauth"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_routers_v1_authenticated_.html">"src/routers/v1/authenticated"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_routers_v1_global_admin_.html">"src/routers/v1/global_<wbr>admin"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_routers_v1_index_.html">"src/routers/v1/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_routers_v1_no_auth_.html">"src/routers/v1/no_<wbr>auth"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_src_sockets_.html">"src/sockets"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer>
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
