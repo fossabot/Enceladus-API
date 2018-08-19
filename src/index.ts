@@ -19,7 +19,7 @@ create_connection({
   type: 'postgres',
   ...config.db,
   synchronize: true,
-  logging: false,
+  logging: ['warn', 'error'],
   entities: ['dist/entities/**/*.js'],
 })
   .then(async _connection => {

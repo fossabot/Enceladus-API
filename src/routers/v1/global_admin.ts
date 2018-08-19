@@ -1,5 +1,5 @@
 import Router from 'koa-router';
-import { preset_event, user } from '../../controller';
+import { preset_event } from '../../controller';
 import { is_global_admin } from '../../middleware/authentication';
 
 /**

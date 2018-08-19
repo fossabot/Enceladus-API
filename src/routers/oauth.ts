@@ -9,6 +9,7 @@ import { User } from '../entities';
 export const router = new Router();
 
 const pending_states: { [key: string]: string } = {};
+Reddit.on('state_expiration', (state: string) => delete pending_states[state]);
 
 export function sign(user: string): string {
   return jwt.sign({ user }, config.jwt_secret);
@@ -19,8 +20,6 @@ router.get('/oauth', ctx => {
   const [auth_url, state] = Reddit.auth_url_and_state();
 
   pending_states[state] = callback_url;
-  // tslint:disable-next-line no-shadowed-variable
-  Reddit.on('state_expiration', (state: string) => delete pending_states[state]);
   ctx.body = { url: auth_url };
   ctx.status = STATUS.OK;
 });
