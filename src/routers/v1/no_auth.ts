@@ -1,4 +1,5 @@
 import Router from 'koa-router';
+import { config } from '../../config';
 import { event, preset_event, section, thread, user } from '../../controller';
 import STATUS from '../../helpers/status_codes';
 
@@ -9,6 +10,15 @@ export const router = new Router({ prefix: '/v1' });
 
 // TODO welcome page
 router.get('/', ctx => ctx.status = STATUS.NOT_IMPLEMENTED);
+
+// there may be a use case for this in the future,
+// but this should be handled entirely from within the server.
+// regardless, expose for automated testing purposes
+if (config.debug) {
+  router.post('/user', user.create);
+  router.patch('/user/:id', user.update);
+  router.delete('/user/:id', user.remove);
+}
 
 router.get('/user', user.get_all);
 router.get('/user/:id', user.get);

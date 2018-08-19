@@ -25,7 +25,7 @@ interface SectionFields {
   name?: string;
   events?: Event[];
   lock_held_by?: Promise<User>;
-  belongs_to_thread?: Promise<Thread>;
+  thread?: Promise<Thread>;
 }
 
 interface SectionFieldsParams {
@@ -40,26 +40,23 @@ interface SectionFieldsParams {
 export default class Section implements SectionFields {
   @once public static get repository() { return getManager().getRepository(Section); }
 
-  public static async find(
+  public static find(
     id: number,
     joins?: { lock?: boolean, thread?: boolean },
   ): Promise<Section> {
     const options: FindOneOptions = { relations: [] };
     if (joins && joins.lock) { options.relations!.push('lock_held_by'); }
-    if (joins && joins.thread) { options.relations!.push('belongs_to_thread'); }
+    if (joins && joins.thread) { options.relations!.push('thread'); }
 
-    const section = await Section.repository.findOne(id, options);
-
-    if (section === undefined) {
-      throw new Error('Section not found');
-    }
-    return section;
+    return Section.repository
+      .findOneOrFail(id, options)
+      .catch(() => Promise.reject('Section not found'));
   }
 
   public static find_all(joins?: { lock?: boolean, thread?: boolean }): Promise<Section[]> {
     const options: FindManyOptions = { relations: [] };
     if (joins && joins.lock) { options.relations!.push('lock_held_by'); }
-    if (joins && joins.thread) { options.relations!.push('belongs_to_thread'); }
+    if (joins && joins.thread) { options.relations!.push('thread'); }
 
     return Section.repository.find(options);
   }
@@ -67,11 +64,11 @@ export default class Section implements SectionFields {
   @PrimaryGeneratedColumn() public id: number;
   @Column('text') public content: string = '';
   @Column() public name: string;
-  @OneToMany(() => Event, event => event.belongs_to_section, { nullable: false, eager: true })
+  @OneToMany(() => Event, event => event.section, { nullable: false, eager: true })
     public events: Event[];
-  @ManyToOne(() => User, user => user.section_locks_held) public lock_held_by: Promise<User>;
+  @ManyToOne(() => User, user => user.locks_held) public lock_held_by: Promise<User>;
   @ManyToOne(() => Thread, thread => thread.sections, { nullable: false })
-    public belongs_to_thread: Promise<Thread>;
+    public thread: Promise<Thread>;
 
   // tslint:disable-next-line member-ordering
   public static async new(fields: SectionFieldsParams = {}): Promise<Section> {
@@ -80,7 +77,7 @@ export default class Section implements SectionFields {
     assign(section, pick(fields, ['content', 'name']));
 
     if (fields.thread !== undefined) {
-      section.belongs_to_thread = Promise.resolve(await Thread.find(fields.thread));
+      section.thread = Promise.resolve(await Thread.find(fields.thread));
     }
 
     return section;

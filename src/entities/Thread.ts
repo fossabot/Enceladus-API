@@ -39,7 +39,7 @@ interface ThreadFields {
 export default class Thread implements ThreadFields, Queryable {
   @once public static get repository() { return getManager().getRepository(Thread); }
 
-  public static async find(
+  public static find(
     id: number,
     joins?: { user?: boolean, sections?: boolean },
   ): Promise<Thread> {
@@ -47,12 +47,9 @@ export default class Thread implements ThreadFields, Queryable {
     if (joins && joins.user) { options.relations!.push('created_by'); }
     if (joins && joins.sections) { options.relations!.push('sections'); }
 
-    const thread = await Thread.repository.findOne(id, options);
-
-    if (thread === undefined) {
-      throw new Error('Thread not found');
-    }
-    return thread;
+    return Thread.repository
+      .findOneOrFail(id, options)
+      .catch(() => Promise.reject('Thread not found'));
   }
 
   public static find_all(joins?: { user?: boolean, sections?: boolean }): Promise<Thread[]> {

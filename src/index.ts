@@ -40,7 +40,6 @@ create_connection({
     [
       oauth_endpoints,
       v1.no_auth,
-      v1.attempted_auth,
       v1.authenticated,
       v1.global_admin,
     ].forEach(router => {

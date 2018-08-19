@@ -27,11 +27,11 @@ and have the appropriate authentication checks in place.
 | ------------------ | --------- | ---------------------- | --------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | :heavy_check_mark: | `GET`     | `/oauth`               | 200 ok          | None          | `callback`                                                                                                                                 |
 | :heavy_check_mark: | `GET`     | `/oauth/callback`      | 303 see other   | None          | `code`<br>`state`                                                                                                                          |
-| :heavy_check_mark: | `GET`     | `/v1/user`             | 200 ok          | None*         | _none_                                                                                                                                     |
-| :heavy_check_mark: | `GET`     | `/v1/user/:id`         | 200 ok          | None*         | _none_                                                                                                                                     |
-| :heavy_check_mark: | `POST`†   | `/v1/user`             | 201 created     | Global admin  | `reddit_username`<br>`lang`<br>`refresh_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member` |
-| :heavy_check_mark: | `PATCH`†  | `/v1/user/:id`         | 200 ok          | Global admin  | `lang`<br>`refresh_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member`                      |
-| :heavy_check_mark: | `DELETE`† | `/v1/user/:id`         | 204 no content  | Global admin  | _none_                                                                                                                                     |
+| :heavy_check_mark: | `GET`     | `/v1/user`             | 200 ok          | None          | _none_                                                                                                                                     |
+| :heavy_check_mark: | `GET`     | `/v1/user/:id`         | 200 ok          | None          | _none_                                                                                                                                     |
+| :heavy_check_mark: | `POST`†   | `/v1/user`             | 201 created     | None          | `reddit_username`<br>`lang`<br>`refresh_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member` |
+| :heavy_check_mark: | `PATCH`†  | `/v1/user/:id`         | 200 ok          | None          | `lang`<br>`refresh_token`<br>`is_global_admin`<br>`spacex__is_admin`<br>`spacex__is_mod`<br>`spacex__is_slack_member`                      |
+| :heavy_check_mark: | `DELETE`† | `/v1/user/:id`         | 204 no content  | None          | _none_                                                                                                                                     |
 | :heavy_check_mark: | `GET`     | `/v1/event`            | 200 ok          | None          | _none_                                                                                                                                     |
 | :heavy_check_mark: | `GET`     | `/v1/event/:id`        | 200 ok          | None          | _none_                                                                                                                                     |
 | :heavy_check_mark: | `POST`    | `/v1/event`            | 201 created     | Thread author | `message`<br>`posted`<br>`terminal_count`<br>`section`                                                                                     |
@@ -52,9 +52,6 @@ and have the appropriate authentication checks in place.
 | :heavy_check_mark: | `POST`    | `/v1/thread`           | 201 created     | Signed in     | `launch_name`<br>`subreddit`<br>`t0`<br>`take_number`<br>`youtube_id`<br>`created_by`<br>`spacex__api_id`                                  |
 | :heavy_check_mark: | `PATCH`   | `/v1/thread/:id`       | 200 ok          | Thread author | `launch_name`<br>`t0`<br>`take_number`<br>`youtube_id`<br>`created_by`<br>`spacex__api_id`                                                 |
 | :heavy_check_mark: | `DELETE`  | `/v1/thread/:id`       | 204 no content  | Thread author | _none_                                                                                                                                     |
-
-\* No authentication is required for accessing most data.
-Must be authenticated as a _global admin_ in order to access refresh tokens.
 
 † These endpoints are only available when in the development environment.
 When in production, these endpoints will return a 404.

@@ -37,7 +37,7 @@ export async function create(ctx: BaseContext) {
 export async function update(ctx: BaseContext) {
   const section = await Section.find(ctx.params.id, { thread: true });
 
-  await minimum_thread_host(ctx, await section.belongs_to_thread);
+  await minimum_thread_host(ctx, await section.thread);
 
   try {
     (await section.update(ctx.request.body)).save();
@@ -50,7 +50,7 @@ export async function update(ctx: BaseContext) {
 export async function remove(ctx: BaseContext) {
   const section = await Section.find(ctx.params.id, { thread: true });
 
-  await minimum_thread_host(ctx, await section.belongs_to_thread);
+  await minimum_thread_host(ctx, await section.thread);
 
   try {
     section.delete();

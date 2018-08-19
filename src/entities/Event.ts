@@ -23,7 +23,7 @@ interface EventFields {
   message?: string;
   posted?: boolean;
   terminal_count?: string;
-  belongs_to_section?: Promise<Section>;
+  section?: Promise<Section>;
 }
 
 interface EventFieldsParams {
@@ -37,21 +37,18 @@ interface EventFieldsParams {
 export default class Event implements EventFields, Queryable {
   @once public static get repository() { return getManager().getRepository(Event); }
 
-  public static async find(id: number, joins?: { section?: boolean }): Promise<Event> {
+  public static find(id: number, joins?: { section?: boolean }): Promise<Event> {
     const options: FindOneOptions = { relations: [] };
-    if (joins && joins.section) { options.relations!.push('belongs_to_section'); }
+    if (joins && joins.section) { options.relations!.push('section'); }
 
-    const event = await Event.repository.findOne(id, options);
-
-    if (event === undefined) {
-      throw new Error('Event not found');
-    }
-    return event;
+    return Event.repository
+      .findOneOrFail(id, options)
+      .catch(() => Promise.reject('Event not found'));
   }
 
   public static find_all(joins?: { section?: boolean }): Promise<Event[]> {
     const options: FindManyOptions = { relations: [] };
-    if (joins && joins.section) { options.relations!.push('belongs_to_section'); }
+    if (joins && joins.section) { options.relations!.push('section'); }
 
     return Event.repository.find(options);
   }
@@ -61,7 +58,7 @@ export default class Event implements EventFields, Queryable {
   @Column() public posted: boolean = false;
   @Column() public terminal_count: string = '';
   @ManyToOne(() => Section, property('events'), { nullable: false })
-    public belongs_to_section: Promise<Section>;
+    public section: Promise<Section>;
 
   // tslint:disable-next-line member-ordering
   public static async new(fields: EventFieldsParams = {}): Promise<Event> {
@@ -70,7 +67,7 @@ export default class Event implements EventFields, Queryable {
     assign(event, pick(fields, ['message', 'posted', 'terminal_count']));
 
     if (fields.section !== undefined) {
-      event.belongs_to_section = Promise.resolve(await Section.find(fields.section));
+      event.section = Promise.resolve(await Section.find(fields.section));
     }
 
     return event;

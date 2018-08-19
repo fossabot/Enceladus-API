@@ -3,6 +3,7 @@ import User from '../entities/User';
 import { BaseContext } from '../helpers/BaseContext';
 import { created, error, okay } from '../helpers/method_binds';
 import STATUS from '../helpers/status_codes';
+import { sign } from '../routers/oauth';
 
 export async function get_all(ctx: BaseContext) {
   ctx.body = await User.find_all();
@@ -18,6 +19,7 @@ export function get(ctx: BaseContext) {
 export function create(ctx: BaseContext) {
   return new User(ctx.request.body)
     .save()
+    .then(user => ({ ...user, jwt: sign(user.reddit_username) }))
     .then(created.bind(ctx))
     .catch(error.bind(ctx));
 }

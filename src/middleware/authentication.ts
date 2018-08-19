@@ -8,7 +8,6 @@ import { BaseContext } from '../helpers/BaseContext';
 import STATUS from '../helpers/status_codes';
 
 const authenticated = jwt({ secret: config.jwt_secret, key: 'jwt' });
-const auth_passthrough = jwt({ secret: config.jwt_secret, key: 'jwt', passthrough: true });
 
 async function assign_data(ctx: BaseContext, next: () => Promise<unknown>) {
   const username: Option<string> = get(ctx, 'state.jwt.user');
@@ -29,10 +28,10 @@ async function assign_data(ctx: BaseContext, next: () => Promise<unknown>) {
 
   ctx.state.user_data = {
     ...pick(user, [
-    'is_global_admin',
-    'spacex__is_admin',
-    'spacex__is_mod',
-    'spacex__is_slack_member',
+      'is_global_admin',
+      'spacex__is_admin',
+      'spacex__is_mod',
+      'spacex__is_slack_member',
     ]),
     username,
   };
@@ -51,6 +50,5 @@ function global_admin(ctx: BaseContext, next: () => Promise<unknown>) {
   return next();
 }
 
-export const attempt_authentication = [auth_passthrough, assign_data];
 export const is_authenticated = [authenticated, assign_data];
 export const is_global_admin = [authenticated, assign_data, global_admin];

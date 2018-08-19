@@ -26,13 +26,10 @@ interface PresetEventFields {
 export default class PresetEvent implements PresetEventFields, Queryable {
   @once public static get repository() { return getManager().getRepository(PresetEvent); }
 
-  public static async find(id: number): Promise<PresetEvent> {
-    const preset_event = await PresetEvent.repository.findOne(id);
-
-    if (preset_event === undefined) {
-      throw new Error('Preset event not found');
-    }
-    return preset_event;
+  public static find(id: number): Promise<PresetEvent> {
+    return PresetEvent.repository
+      .findOneOrFail(id)
+      .catch(() => Promise.reject('Preset event not found'));
   }
 
   public static find_all(): Promise<PresetEvent[]> {

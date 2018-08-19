@@ -10,6 +10,10 @@ export const router = new Router();
 
 const pending_states: { [key: string]: string } = {};
 
+export function sign(user: string): string {
+  return jwt.sign({ user }, config.jwt_secret);
+}
+
 router.get('/oauth', ctx => {
   const { callback: callback_url } = ctx.query;
   const [auth_url, state] = Reddit.auth_url_and_state();
@@ -52,7 +56,7 @@ router.get('/oauth/callback', async ctx => {
     spacex__is_slack_member: false,
   }).save();
 
-  const token = jwt.sign({ user: reddit_username }, config.jwt_secret, { noTimestamp: true });
+  const token = sign(reddit_username);
   ctx.status = STATUS.SEE_ALSO;
   ctx.redirect(`${callback_url}?token=${token}`);
 });

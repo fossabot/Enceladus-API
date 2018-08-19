@@ -29,27 +29,24 @@ interface UserFields {
   spacex__is_mod?: boolean;
   spacex__is_slack_member?: boolean;
   threads_created?: Promise<Thread[]>;
-  section_locks_held?: Promise<Section[]>;
+  locks_held?: Promise<Section[]>;
 }
 
 @Entity()
 export default class User implements UserFields, Queryable {
   @once public static get repository() { return getManager().getRepository(User); }
 
-  public static async find(
+  public static find(
     id: number,
     joins?: { threads_created?: boolean, section_locks_held?: boolean },
   ): Promise<User> {
     const options: FindOneOptions = { relations: [] };
     if (joins && joins.threads_created) { options.relations!.push('threads_created'); }
-    if (joins && joins.section_locks_held) { options.relations!.push('section_locks_held'); }
+    if (joins && joins.section_locks_held) { options.relations!.push('locks_held'); }
 
-    const user = await User.repository.findOne(id, options);
-
-    if (user === undefined) {
-      throw new Error('User not found');
-    }
-    return user;
+    return User.repository
+      .findOneOrFail(id, options)
+      .catch(() => Promise.reject('User not found'));
   }
 
   public static find_all(
@@ -57,7 +54,7 @@ export default class User implements UserFields, Queryable {
   ): Promise<User[]> {
     const options: FindManyOptions = { relations: [] };
     if (joins && joins.threads_created) { options.relations!.push('threads_created'); }
-    if (joins && joins.section_locks_held) { options.relations!.push('section_locks_held'); }
+    if (joins && joins.section_locks_held) { options.relations!.push('locks_held'); }
 
     return User.repository.find(options);
   }
@@ -71,7 +68,7 @@ export default class User implements UserFields, Queryable {
   @Column() public spacex__is_mod: boolean = false;
   @Column() public spacex__is_slack_member: boolean = false;
   @OneToMany(() => Thread, property('created_by')) public threads_created: Promise<Thread[]>;
-  @OneToMany(() => Section, property('lock_held_by')) public section_locks_held: Promise<Section[]>;
+  @OneToMany(() => Section, property('lock_held_by')) public locks_held: Promise<Section[]>;
 
   constructor(fields: UserFields = {}) {
     assign(
