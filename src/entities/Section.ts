@@ -2,9 +2,6 @@ import once from 'lodash-decorators/once';
 import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import {
-  // AfterInsert,
-  // AfterRemove,
-  // AfterUpdate,
   Column,
   DeleteResult,
   Entity,
@@ -15,7 +12,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-// import { sockets as io_namespace } from '../sockets';
 import Event from './Event';
 import Thread from './Thread';
 import User from './User';
@@ -105,16 +101,4 @@ export default class Section implements SectionFields {
   public save(): Promise<this> {
     return Section.repository.save(this);
   }
-
-  // @AfterInsert() protected emit_insert() {
-  //   io_namespace.section.emit('insert', JSON.stringify(this));
-  // }
-
-  // @AfterUpdate() protected emit_update() {
-  //   io_namespace.section.emit('update', JSON.stringify(this));
-  // }
-
-  // @AfterRemove() protected emit_delete() {
-  //   io_namespace.section.emit('delete', JSON.stringify(this));
-  // }
 }

@@ -3,9 +3,6 @@ import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import property from 'lodash/property';
 import {
-  // AfterInsert,
-  // AfterRemove,
-  // AfterUpdate,
   Column,
   DeleteResult,
   Entity,
@@ -17,7 +14,6 @@ import {
 } from 'typeorm';
 import Queryable from './Queryable';
 import Section from './Section';
-// import { sockets as io_namespace } from '../sockets';
 
 interface EventFields {
   message?: string;
@@ -84,16 +80,4 @@ export default class Event implements EventFields, Queryable {
   public save(): Promise<this> {
     return Event.repository.save(this);
   }
-
-  // @AfterInsert() protected emit_insert() {
-  //   io_namespace.event.emit('insert', JSON.stringify(this));
-  // }
-
-  // @AfterUpdate() protected emit_update() {
-  //   io_namespace.event.emit('update', JSON.stringify(this));
-  // }
-
-  // @AfterRemove() protected emit_delete() {
-  //   io_namespace.event.emit('delete', JSON.stringify(this));
-  // }
 }

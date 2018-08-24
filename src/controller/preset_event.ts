@@ -16,25 +16,22 @@ export function get(ctx: BaseContext) {
 }
 
 export function create(ctx: BaseContext) {
-  return new PresetEvent(ctx.request.body)
-    .save()
+  return PresetEvent
+    .create(ctx.request.body)
     .then(created.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function update(ctx: BaseContext) {
   return PresetEvent
-    .find(ctx.params.id)
-    .then(preset_event => preset_event.update(ctx.request.body))
-    .then(preset_event => preset_event.save())
+    .update({ ...ctx.request.body, id: ctx.params.id })
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function remove(ctx: BaseContext) {
   return PresetEvent
-    .find(ctx.params.id)
-    .then(preset_event => preset_event.delete())
+    .delete(ctx.params.id)
     .then(() => ctx.status = STATUS.NO_CONTENT)
     .catch(error.bind(ctx));
 }

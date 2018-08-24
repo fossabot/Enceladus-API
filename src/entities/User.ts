@@ -3,9 +3,6 @@ import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import property from 'lodash/property';
 import {
-  // AfterInsert,
-  // AfterRemove,
-  // AfterUpdate,
   Column,
   DeleteResult,
   Entity,
@@ -18,7 +15,6 @@ import {
 import Queryable from './Queryable';
 import Section from './Section';
 import Thread from './Thread';
-// import { sockets as io_namespace } from '../sockets';
 
 interface UserFields {
   reddit_username?: string;
@@ -108,16 +104,4 @@ export default class User implements UserFields, Queryable {
   public save(): Promise<this> {
     return User.repository.save(this);
   }
-
-  // @AfterInsert() protected emit_insert() {
-  //   io_namespace.user.emit('insert', JSON.stringify(this));
-  // }
-
-  // @AfterUpdate() protected emit_update() {
-  //   io_namespace.user.emit('update', JSON.stringify(this));
-  // }
-
-  // @AfterRemove() protected emit_delete() {
-  //   io_namespace.user.emit('delete', JSON.stringify(this));
-  // }
 }

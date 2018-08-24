@@ -1,78 +1,70 @@
-import once from 'lodash-decorators/once';
-import assign from 'lodash/assign';
-import pick from 'lodash/pick';
-import {
-  // AfterInsert,
-  // AfterRemove,
-  // AfterUpdate,
-  Column,
-  DeleteResult,
-  Entity,
-  getManager,
-  PrimaryGeneratedColumn,
-  Unique,
-} from 'typeorm';
-import Queryable from './Queryable';
-// import { sockets as io_namespace } from '../sockets';
+import { knex } from '..';
 
-interface PresetEventFields {
+interface Fields {
+  id: number;
+  holds_clock: boolean;
+  message: string;
+  name: string;
+}
+
+interface OptionalFields {
+  id?: number;
   holds_clock?: boolean;
   message?: string;
   name?: string;
 }
 
-@Entity()
-@Unique(['name'])
-export default class PresetEvent implements PresetEventFields, Queryable {
-  @once public static get repository() { return getManager().getRepository(PresetEvent); }
+const fields_array = [
+  'id',
+  'holds_clock',
+  'message',
+  'name',
+];
 
-  public static find(id: number): Promise<PresetEvent> {
-    return PresetEvent.repository
-      .findOneOrFail(id)
-      .catch(() => Promise.reject('Preset event not found'));
+// tslint:disable-next-line array-type
+function pick_first(value: Fields[]): Fields {
+  if (value) {
+    return value[0];
   }
-
-  public static find_all(): Promise<PresetEvent[]> {
-    return PresetEvent.repository.find();
-  }
-
-  @PrimaryGeneratedColumn() public id: number;
-  @Column() public holds_clock: boolean = false;
-  @Column('text') public message: string = '';
-  @Column() public name: string;
-
-  constructor(fields: PresetEventFields = {}) {
-    assign(this, pick(fields, ['holds_clock', 'message', 'name']));
-
-    // by default, the name is equal to the message
-    if (this.name === undefined) {
-      this.name = this.message;
-    }
-  }
-
-  public update(fields: PresetEventFields = {}): this {
-    return assign(this, pick(fields, ['holds_clock', 'message', 'name']));
-  }
-
-  public delete(): Promise<DeleteResult> {
-    return PresetEvent.repository.delete(this.id);
-  }
-
-  public save(): Promise<this> {
-    return getManager()
-      .getRepository(PresetEvent)
-      .save(this);
-  }
-
-  // @AfterInsert() protected emit_insert() {
-  //   io_namespace.preset_event.emit('insert', JSON.stringify(this));
-  // }
-
-  // @AfterUpdate() protected emit_update() {
-  //   io_namespace.preset_event.emit('update', JSON.stringify(this));
-  // }
-
-  // @AfterRemove() protected emit_delete() {
-  //   io_namespace.preset_event.emit('delete', JSON.stringify(this));
-  // }
+  throw new Error('Preset event not found');
 }
+
+export default {
+  find(id: number): PromiseLike<Fields> {
+    return knex('preset_event')
+      .where({ id })
+      .limit(1)
+      .then(pick_first);
+  },
+
+  find_all(): PromiseLike<Fields[]> {
+    return knex('preset_event');
+  },
+
+  create(params: Fields): PromiseLike<Fields> {
+    // by default, the name is equal to the message
+    if (params.name === undefined) {
+      params.name = params.message;
+    }
+
+    return knex('preset_event')
+      .insert(params)
+      .returning(fields_array)
+      .then(pick_first);
+  },
+
+  update({ id, holds_clock, message, name }: OptionalFields): PromiseLike<Fields> {
+    return knex('preset_event')
+      .update({ holds_clock, message, name })
+      .where({ id })
+      .returning(fields_array)
+      .then(pick_first);
+  },
+
+  delete(id: number): PromiseLike<void> {
+    return knex('preset_event')
+      .delete()
+      .where({ id })
+      .thenReturn();
+  },
+};

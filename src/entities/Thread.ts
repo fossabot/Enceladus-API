@@ -3,9 +3,6 @@ import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import property from 'lodash/property';
 import {
-  // AfterInsert,
-  // AfterRemove,
-  // AfterUpdate,
   Column,
   DeleteResult,
   Entity,
@@ -19,7 +16,6 @@ import {
 import Queryable from './Queryable';
 import Section from './Section';
 import User from './User';
-// import { sockets as io_namespace } from '../sockets';
 
 interface ThreadFields {
   [key: string]: unknown;
@@ -120,16 +116,4 @@ export default class Thread implements ThreadFields, Queryable {
   public save(): Promise<this> {
     return Thread.repository.save(this);
   }
-
-  // @AfterInsert() protected emit_insert() {
-  //   io_namespace.thread.emit('insert', JSON.stringify(this));
-  // }
-
-  // @AfterUpdate() protected emit_update() {
-  //   io_namespace.thread.emit('update', JSON.stringify(this));
-  // }
-
-  // @AfterRemove() protected emit_delete() {
-  //   io_namespace.thread.emit('delete', JSON.stringify(this));
-  // }
 }
