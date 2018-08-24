@@ -12,11 +12,8 @@ const parse_value: (value: any) => any = memoize(
     if (value === 'null') {
       return null;
     }
-    if (/^\d+$/.test(value)) {
-      return parseInt(value, 10);
-    }
-    if (/^\d+\.\d+$/.test(value)) {
-      return parseFloat(value);
+    if (/^\d(\.?\d+)?$/.test(value)) {
+      return Number(value);
     }
     return value;
   },
@@ -26,12 +23,12 @@ const parse_value: (value: any) => any = memoize(
   },
 );
 
-export async function body_types(ctx: BaseContext, next: () => Promise<unknown>) {
+export function body_types(ctx: BaseContext, next: () => Promise<unknown>) {
   const { body } = ctx.request;
 
   Object.entries(body).forEach(([key, value]: [string, any]) => {
     body[key] = parse_value(value);
   });
 
-  await next();
+  return next();
 }

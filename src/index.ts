@@ -1,4 +1,5 @@
 import cors from '@koa/cors';
+import Knex from 'knex';
 import Koa from 'koa';
 import body_parser from 'koa-bodyparser';
 import helmet from 'koa-helmet';
@@ -14,6 +15,18 @@ import * as v1 from './routers/v1';
 // import { sockets } from './sockets';
 
 import './reddit';
+
+// knex connection
+// will take place of the existing TypeORM connection at some point
+export const knex = Knex({
+  client: 'pg',
+  connection: {
+    host: config.db.host,
+    user: config.db.username,
+    password: config.db.password,
+    database: config.db.database,
+  },
+});
 
 create_connection({
   type: 'postgres',
