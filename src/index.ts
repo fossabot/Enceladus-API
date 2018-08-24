@@ -1,5 +1,4 @@
 import cors from '@koa/cors';
-import Knex from 'knex';
 import Koa from 'koa';
 import body_parser from 'koa-bodyparser';
 import helmet from 'koa-helmet';
@@ -8,6 +7,7 @@ import { createConnection as create_connection } from 'typeorm';
 import winston from 'winston';
 
 import { config } from './config';
+import { create_tables, knex } from './create_tables';
 import { body_types } from './middleware/body_types';
 import { logger } from './middleware/logging';
 import { router as oauth_endpoints } from './routers/oauth';
@@ -16,17 +16,7 @@ import * as v1 from './routers/v1';
 
 import './reddit';
 
-// knex connection
-// will take place of the existing TypeORM connection at some point
-export const knex = Knex({
-  client: 'pg',
-  connection: {
-    host: config.db.host,
-    user: config.db.username,
-    password: config.db.password,
-    database: config.db.database,
-  },
-});
+export { knex };
 
 create_connection({
   type: 'postgres',
@@ -36,6 +26,9 @@ create_connection({
   entities: ['dist/entities/**/*.js'],
 })
   .then(async _connection => {
+    // Knex, in the process of replacing TypeORM
+    create_tables();
+
     const app = new Koa();
 
     // sockets.event.attach(app);
