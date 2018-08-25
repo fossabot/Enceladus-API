@@ -1,15 +1,19 @@
 import Event from './Event';
-import PresetEvent from './PresetEvent';
-import Queryable from './Queryable';
+import PresetEvent, { PresetEvent as IPresetEvent } from './PresetEvent';
 import Section from './Section';
-import Thread from './Thread';
-import User from './User';
+import Thread, { Thread as IThread } from './Thread';
+import User, { User as IUser } from './User';
 
 export {
   Event,
   PresetEvent,
-  Queryable,
   Section,
   Thread,
   User,
+
+  // IEvent,
+  IPresetEvent,
+  // ISection,
+  IThread,
+  IUser,
 };

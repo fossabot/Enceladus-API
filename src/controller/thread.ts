@@ -1,4 +1,4 @@
-import Thread from '../entities/Thread';
+import { IThread, Thread } from '../entities';
 import { BaseContext } from '../helpers/BaseContext';
 import { created, error, okay } from '../helpers/method_binds';
 import STATUS from '../helpers/status_codes';
@@ -17,19 +17,18 @@ export function get(ctx: BaseContext) {
 
 export function create(ctx: BaseContext) {
   return Thread
-    .new(ctx.request.body)
-    .then(thread => thread.save())
+    .create(ctx.request.body)
     .then(created.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export async function update(ctx: BaseContext) {
-  const thread = await Thread.find(ctx.params.id, { user: true });
+  const thread = await Thread.find(ctx.params.id);
 
   await minimum_thread_host(ctx, thread);
 
   try {
-    thread.update(ctx.request.body).save();
+    Thread.update(thread.id, ctx.request.body);
     okay.call(ctx, thread);
   } catch (err) {
     error.call(ctx, err);
@@ -37,12 +36,12 @@ export async function update(ctx: BaseContext) {
 }
 
 export async function remove(ctx: BaseContext) {
-  const thread = await Thread.find(ctx.params.id, { user: true });
+  const thread = await Thread.find(ctx.params.id);
 
   await minimum_thread_host(ctx, thread);
 
   try {
-    thread.delete();
+    Thread.delete(thread.id);
     ctx.status = STATUS.NO_CONTENT;
   } catch (err) {
     error.call(ctx, err);
@@ -50,13 +49,13 @@ export async function remove(ctx: BaseContext) {
 }
 
 // throws an error on ctx if the authenticated user is not the host or an admin
-export async function minimum_thread_host(ctx: BaseContext, { subreddit, created_by }: Thread) {
+export async function minimum_thread_host(ctx: BaseContext, { subreddit, created_by }: IThread) {
   const user = ctx.state.user_data!;
 
   if (
    user.is_global_admin !== true &&
    (user as any)[`${subreddit.toLowerCase()}__is_admin`] !== true && // is local admin
-   user.username !== (await created_by).reddit_username // is thread creator
+   user.id !== created_by // is thread creator
   ) {
    ctx.throw(
      STATUS.UNAUTHORIZED,

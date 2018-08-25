@@ -45,15 +45,15 @@ router.get('/oauth/callback', async ctx => {
 
   // we have all the information necessary.
   // let's create a user in the database.
-  await new User({
+  await User.create({
     reddit_username,
     lang,
-    refresh_token,
+    refresh_token: refresh_token!,
     is_global_admin: false,
     spacex__is_admin: false,
     spacex__is_mod: false,
     spacex__is_slack_member: false,
-  }).save();
+  });
 
   const token = sign(reddit_username);
   ctx.status = STATUS.SEE_ALSO;

@@ -28,6 +28,7 @@ async function assign_data(ctx: BaseContext, next: () => Promise<unknown>) {
 
   ctx.state.user_data = {
     ...pick(user, [
+      'id',
       'is_global_admin',
       'spacex__is_admin',
       'spacex__is_mod',

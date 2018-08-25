@@ -5,6 +5,7 @@ export type BaseContext = BaseContext & {
   state: {
     jwt?: { user: string };
     user_data?: {
+      id: number;
       is_global_admin: boolean;
       spacex__is_admin: boolean;
       spacex__is_mod: boolean;

@@ -24,7 +24,7 @@ export function create(ctx: BaseContext) {
 
 export function update(ctx: BaseContext) {
   return PresetEvent
-    .update({ ...ctx.request.body, id: ctx.params.id })
+    .update(ctx.params.id, ctx.request.body)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }

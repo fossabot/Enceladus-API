@@ -17,24 +17,22 @@ export function get(ctx: BaseContext) {
 }
 
 export function create(ctx: BaseContext) {
-  return new User(ctx.request.body)
-    .save()
+  return User.create(ctx.request.body)
     .then(user => ({ ...user, jwt: sign(user.reddit_username) }))
     .then(created.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function update(ctx: BaseContext) {
-  return User.find(ctx.params.id)
-    .then(user => user.update(ctx.request.body))
-    .then(user => user.save())
+  return User
+    .update(ctx.params.id, ctx.request.body)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function remove(ctx: BaseContext) {
-  return User.find(ctx.params.id)
-    .then(user => user.delete())
+  return User
+    .delete(ctx.params.id)
     .then(() => ctx.status = STATUS.NO_CONTENT)
     .catch(error.bind(ctx));
 }
