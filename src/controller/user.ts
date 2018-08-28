@@ -11,30 +11,26 @@ export async function get_all(ctx: BaseContext) {
 }
 
 export function get(ctx: BaseContext) {
-  return User
-    .find(ctx.params.id)
+  return User.find(ctx.params.id)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function create(ctx: BaseContext) {
-  return User
-    .create(ctx.request.body)
+  return User.create(ctx.request.body)
     .then(user => ({ ...user, jwt: sign(user.id) }))
     .then(created.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function update(ctx: BaseContext) {
-  return User
-    .update(ctx.params.id, ctx.request.body)
+  return User.update(ctx.params.id, ctx.request.body)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function remove(ctx: BaseContext) {
-  return User
-    .delete(ctx.params.id)
-    .then(() => ctx.status = STATUS.NO_CONTENT)
+  return User.delete(ctx.params.id)
+    .then(() => (ctx.status = STATUS.NO_CONTENT))
     .catch(error.bind(ctx));
 }

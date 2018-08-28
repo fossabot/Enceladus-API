@@ -9,15 +9,13 @@ export async function get_all(ctx: BaseContext) {
 }
 
 export function get(ctx: BaseContext) {
-  return Thread
-    .find(ctx.params.id)
+  return Thread.find(ctx.params.id)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function create(ctx: BaseContext) {
-  return Thread
-    .create(ctx.request.body)
+  return Thread.create(ctx.request.body)
     .then(created.bind(ctx))
     .catch(error.bind(ctx));
 }
@@ -49,17 +47,20 @@ export async function remove(ctx: BaseContext) {
 }
 
 // throws an error on ctx if the authenticated user is not the host or an admin
-export async function minimum_thread_host(ctx: BaseContext, { subreddit, created_by }: IThread) {
+export async function minimum_thread_host(
+  ctx: BaseContext,
+  { subreddit, created_by }: IThread,
+) {
   const user = ctx.state.user_data!;
 
   if (
-   user.is_global_admin !== true &&
-   (user as any)[`${subreddit.toLowerCase()}__is_admin`] !== true && // is local admin
-   user.id !== created_by // is thread creator
+    user.is_global_admin !== true &&
+    (user as any)[`${subreddit.toLowerCase()}__is_admin`] !== true && // is local admin
+    user.id !== created_by // is thread creator
   ) {
-   ctx.throw(
-     STATUS.UNAUTHORIZED,
-     'Must be authenticated as the thread host or an admin to access this endpoint.'
-   );
+    ctx.throw(
+      STATUS.UNAUTHORIZED,
+      'Must be authenticated as the thread host or an admin to access this endpoint.',
+    );
   }
 }

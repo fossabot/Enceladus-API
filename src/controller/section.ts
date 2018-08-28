@@ -10,8 +10,7 @@ export async function get_all(ctx: BaseContext) {
 }
 
 export function get(ctx: BaseContext) {
-  return Section
-    .find(ctx.params.id)
+  return Section.find(ctx.params.id)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }

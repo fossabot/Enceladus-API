@@ -9,7 +9,7 @@ import STATUS from '../../helpers/status_codes';
 export const router = new Router({ prefix: '/v1' });
 
 // TODO welcome page
-router.get('/', ctx => ctx.status = STATUS.NOT_IMPLEMENTED);
+router.get('/', ctx => (ctx.status = STATUS.NOT_IMPLEMENTED));
 
 // there may be a use case for this in the future,
 // but this should be handled entirely from within the server.

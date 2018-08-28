@@ -29,7 +29,7 @@ const fields_config = {
     create: true,
     update: true,
     returning: true,
-  }
+  },
 };
 
 const create_fields = Object.entries(fields_config)

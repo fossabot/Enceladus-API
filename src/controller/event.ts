@@ -17,7 +17,10 @@ export function get(ctx: BaseContext) {
 }
 
 export async function create(ctx: BaseContext) {
-  await minimum_thread_host(ctx, await authentication_data(ctx.request.body.in_section));
+  await minimum_thread_host(
+    ctx,
+    await authentication_data(ctx.request.body.in_section),
+  );
 
   try {
     const event = await Event.create(ctx.request.body);
@@ -51,11 +54,7 @@ export async function remove(ctx: BaseContext) {
 
 function authentication_data(section_id: number) {
   return knex('section')
-    .column([
-      'thread.subreddit',
-      'user.id',
-      'user.spacex__is_admin',
-    ])
+    .column(['thread.subreddit', 'user.id', 'user.spacex__is_admin'])
     .join('thread', 'thread.id', 'section.thread_id')
     .join('user', 'thread.created_by', 'user.id')
     .where({ 'section.id': section_id })

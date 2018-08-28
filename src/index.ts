@@ -33,17 +33,14 @@ create_tables()
     app.use(body_parser());
     app.use(body_types);
 
-    [
-      oauth_endpoints,
-      v1.no_auth,
-      v1.authenticated,
-      v1.global_admin,
-    ].forEach(router => {
-      app
-        .use(router.routes())
-        .use(router.allowedMethods())
-        .use(router.middleware());
-    });
+    [oauth_endpoints, v1.no_auth, v1.authenticated, v1.global_admin].forEach(
+      router => {
+        app
+          .use(router.routes())
+          .use(router.allowedMethods())
+          .use(router.middleware());
+      },
+    );
 
     app.listen(config.port);
     console.log(`Server listening on port ${config.port}`);

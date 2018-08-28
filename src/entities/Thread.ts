@@ -68,7 +68,7 @@ const fields_config = {
     create: false,
     update: true,
     returning: true,
-  }
+  },
 };
 
 const create_fields = Object.entries(fields_config)

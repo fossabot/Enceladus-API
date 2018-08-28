@@ -30,7 +30,8 @@ router.get('/oauth/callback', async ctx => {
   const callback_url = pending_states[state];
   if (callback_url === undefined) {
     ctx.status = STATUS.GONE;
-    ctx.body = "Oh no! We don't have that state any more. Consider trying " +
+    ctx.body =
+      "Oh no! We don't have that state any more. Consider trying " +
       'again from your preferred client.';
     return;
   }

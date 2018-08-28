@@ -65,11 +65,13 @@ function pick_first(value: Section[]): Section {
 
 export default {
   find(id: number): Bluebird<Section> {
-    return knex('section')
-      // .innerJoin('event', 'event.in_section', 'section.id')
-      .where({ 'section.id': id })
-      .limit(1)
-      .then(pick_first);
+    return (
+      knex('section')
+        // .innerJoin('event', 'event.in_section', 'section.id')
+        .where({ 'section.id': id })
+        .limit(1)
+        .then(pick_first)
+    );
   },
 
   find_all(): Bluebird<Section[]> {

@@ -9,29 +9,25 @@ export async function get_all(ctx: BaseContext) {
 }
 
 export function get(ctx: BaseContext) {
-  return PresetEvent
-    .find(ctx.params.id)
+  return PresetEvent.find(ctx.params.id)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function create(ctx: BaseContext) {
-  return PresetEvent
-    .create(ctx.request.body)
+  return PresetEvent.create(ctx.request.body)
     .then(created.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function update(ctx: BaseContext) {
-  return PresetEvent
-    .update(ctx.params.id, ctx.request.body)
+  return PresetEvent.update(ctx.params.id, ctx.request.body)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function remove(ctx: BaseContext) {
-  return PresetEvent
-    .delete(ctx.params.id)
-    .then(() => ctx.status = STATUS.NO_CONTENT)
+  return PresetEvent.delete(ctx.params.id)
+    .then(() => (ctx.status = STATUS.NO_CONTENT))
     .catch(error.bind(ctx));
 }
