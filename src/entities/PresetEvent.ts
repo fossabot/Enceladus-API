@@ -60,10 +60,10 @@ export default {
   },
 
   find_all(): Bluebird<PresetEvent[]> {
-    return knex('preset_event').value();
+    return knex('preset_event').columns(returning_fields) as any;
   },
 
-  create(fields: PresetEvent): Bluebird<PresetEvent> {
+  create(fields: Partial<PresetEvent>): Bluebird<PresetEvent> {
     // by default, the name is equal to the message
     if (fields.name === undefined) {
       fields.name = fields.message;
@@ -75,7 +75,7 @@ export default {
       .then(pick_first);
   },
 
-  update(id: number, fields: PresetEvent): Bluebird<PresetEvent> {
+  update(id: number, fields: Partial<PresetEvent>): Bluebird<PresetEvent> {
     return knex('preset_event')
       .update(pick(fields, update_fields))
       .where({ id })

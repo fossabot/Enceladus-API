@@ -3,7 +3,6 @@ import Koa from 'koa';
 import body_parser from 'koa-bodyparser';
 import helmet from 'koa-helmet';
 import 'reflect-metadata';
-import { createConnection as create_connection } from 'typeorm';
 import winston from 'winston';
 
 import { config } from './config';
@@ -18,17 +17,8 @@ import './reddit';
 
 export { knex };
 
-create_connection({
-  type: 'postgres',
-  ...config.db,
-  synchronize: true,
-  logging: ['warn', 'error'],
-  entities: ['dist/entities/**/*.js'],
-})
-  .then(async _connection => {
-    // Knex, in the process of replacing TypeORM
-    create_tables();
-
+create_tables()
+  .then(async () => {
     const app = new Koa();
 
     // sockets.event.attach(app);

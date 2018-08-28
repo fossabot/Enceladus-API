@@ -1,104 +1,102 @@
-import once from 'lodash-decorators/once';
-import assign from 'lodash/assign';
+import Bluebird from 'bluebird';
 import pick from 'lodash/pick';
-import {
-  Column,
-  DeleteResult,
-  Entity,
-  FindManyOptions,
-  FindOneOptions,
-  getManager,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import Event from './Event';
-import Thread from './Thread';
-import User from './User';
+import { knex } from '../create_tables';
 
-interface SectionFields {
-  content?: string;
-  name?: string;
-  events?: Event[];
-  lock_held_by?: Promise<User>;
-  thread?: Promise<Thread>;
+export interface Section {
+  id: number;
+  content: string;
+  name: string;
+  events: number[]; // Event[]
+  lock_held_by: number;
+  thread_id: number;
 }
 
-interface SectionFieldsParams {
-  content?: string;
-  name?: string;
-  events?: string; // number[] concatenated by commas
-  lock?: number;
-  thread?: number;
+const fields_config = {
+  id: {
+    create: false,
+    update: false,
+    returning: true,
+  },
+  content: {
+    create: true,
+    update: true,
+    returning: true,
+  },
+  name: {
+    create: true,
+    update: true,
+    returning: true,
+  },
+  events: {
+    create: false,
+    update: true,
+    returning: true,
+  },
+  lock_held_by: {
+    create: false,
+    update: true,
+    returning: true,
+  },
+  thread_id: {
+    create: true,
+    update: false,
+    returning: true,
+  },
+};
+
+const create_fields = Object.entries(fields_config)
+  .filter(([_, { create }]) => create)
+  .map(([key, _]) => key);
+
+const update_fields = Object.entries(fields_config)
+  .filter(([_, { update }]) => update)
+  .map(([key, _]) => key);
+
+const returning_fields = Object.entries(fields_config)
+  .filter(([_, { returning }]) => returning)
+  .map(([key, _]) => key);
+
+function pick_first(value: Section[]): Section {
+  if (value) {
+    return value[0];
+  }
+  throw new Error('Section not found');
 }
 
-@Entity()
-export default class Section implements SectionFields {
-  @once public static get repository() { return getManager().getRepository(Section); }
+export default {
+  find(id: number): Bluebird<Section> {
+    return knex('section')
+      // .innerJoin('event', 'event.in_section', 'section.id')
+      .where({ 'section.id': id })
+      .limit(1)
+      .then(pick_first);
+  },
 
-  public static find(
-    id: number,
-    joins?: { lock?: boolean, thread?: boolean },
-  ): Promise<Section> {
-    const options: FindOneOptions = { relations: [] };
-    if (joins && joins.lock) { options.relations!.push('lock_held_by'); }
-    if (joins && joins.thread) { options.relations!.push('thread'); }
+  find_all(): Bluebird<Section[]> {
+    return knex('section').columns(returning_fields) as any;
+  },
 
-    return Section.repository
-      .findOneOrFail(id, options)
-      .catch(() => Promise.reject('Section not found'));
-  }
+  // TODO verify thread exists
+  create(fields: Partial<Section>): Bluebird<Section> {
+    return knex('section')
+      .insert({ ...pick(fields, create_fields), events: JSON.stringify([]) })
+      .returning(returning_fields)
+      .then(pick_first);
+  },
 
-  public static find_all(joins?: { lock?: boolean, thread?: boolean }): Promise<Section[]> {
-    const options: FindManyOptions = { relations: [] };
-    if (joins && joins.lock) { options.relations!.push('lock_held_by'); }
-    if (joins && joins.thread) { options.relations!.push('thread'); }
+  // TODO verify user and events exist
+  update(id: number, fields: Partial<Section>): Bluebird<Section> {
+    return knex('section')
+      .update(pick(fields, update_fields))
+      .where({ id })
+      .returning(returning_fields)
+      .then(pick_first);
+  },
 
-    return Section.repository.find(options);
-  }
-
-  @PrimaryGeneratedColumn() public id: number;
-  @Column('text') public content: string = '';
-  @Column() public name: string;
-  @OneToMany(() => Event, event => event.section, { nullable: false, eager: true })
-    public events: Event[];
-  @ManyToOne(() => User, user => user.locks_held) public lock_held_by: Promise<User>;
-  @ManyToOne(() => Thread, thread => thread.sections, { nullable: false })
-    public thread: Promise<Thread>;
-
-  // tslint:disable-next-line member-ordering
-  public static async new(fields: SectionFieldsParams = {}): Promise<Section> {
-    const section = new Section();
-
-    assign(section, pick(fields, ['content', 'name']));
-
-    if (fields.thread !== undefined) {
-      section.thread = Promise.resolve(await Thread.find(fields.thread));
-    }
-
-    return section;
-  }
-
-  public async update(fields: SectionFieldsParams = {}): Promise<this> {
-    assign(this, pick(fields, ['content', 'name']));
-
-    if (fields.lock !== undefined) {
-      this.lock_held_by = User.find(fields.lock);
-    }
-
-    if (fields.events !== undefined) {
-      const events = fields.events.split(',').map(n => parseInt(n, 10));
-      this.events = await Promise.all(events.map($ => Event.find($)));
-    }
-
-    return this;
-  }
-
-  public delete(): Promise<DeleteResult> {
-    return Section.repository.delete(this.id);
-  }
-
-  public save(): Promise<this> {
-    return Section.repository.save(this);
-  }
-}
+  delete(id: number) {
+    return knex('section')
+      .delete()
+      .where({ id })
+      .thenReturn();
+  },
+};

@@ -5,13 +5,7 @@ import { config } from './config';
 // will take place of the existing TypeORM connection at some point
 export const knex = Knex({
   client: 'pg',
-  connection: {
-    host: config.db.host,
-    port: config.db.port,
-    user: config.db.username,
-    password: config.db.password,
-    database: config.db.database,
-  },
+  connection: config.db,
 });
 
 export async function create_tables() {
@@ -46,17 +40,17 @@ export async function create_tables() {
       table.integer('t0').unsigned();
       table.integer('take_number').unsigned().notNullable();
       table.string('youtube_id', 11);
-      table.integer('created_by_id').unsigned().notNullable();
+      table.integer('created_by').unsigned().notNullable();
       table.string('spacex__api_id');
 
       table
-        .text('sections')
+        .json('sections')
         .notNullable()
-        .comment('Stringified array of foreign keys. Must be manually managed.');
+        .comment('Array of foreign keys. Must be manually managed.');
 
       table.unique(['subreddit', 'post_id']);
 
-      table.foreign('created_by_id').references('id').inTable('user');
+      table.foreign('created_by').references('id').inTable('user');
     });
   }
 
@@ -69,9 +63,9 @@ export async function create_tables() {
       table.integer('thread_id').unsigned().notNullable().index();
 
       table
-        .text('events')
+        .json('events')
         .notNullable()
-        .comment('Stringified array of foreign keys. Must be manually managed.');
+        .comment('Array of foreign keys. Must be manually managed.');
 
       table.foreign('lock_held_by').references('id').inTable('user');
       table.foreign('thread_id').references('id').inTable('user');

@@ -1,4 +1,5 @@
 import Bluebird from 'bluebird';
+import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import { knex } from '..';
 // import Section from './Section';
@@ -30,6 +31,11 @@ const fields_config = {
   },
   post_id: {
     create: false,
+    update: false,
+    returning: true,
+  },
+  subreddit: {
+    create: true,
     update: false,
     returning: true,
   },
@@ -93,21 +99,23 @@ export default {
   },
 
   find_all(): Bluebird<Thread[]> {
-    return knex('thread').value();
+    return knex('thread').columns(returning_fields) as any;
   },
 
-  async create(fields: Thread): Promise<Thread> {
-    if (fields.created_by === undefined || await User.find(fields.created_by) === undefined) {
-      throw new Error('User not found');
-    }
+  async create(fields: Partial<Thread>): Promise<Thread> {
+    // if (fields.created_by === undefined || await User.find(fields.created_by) === undefined) {
+    //   throw new Error('User not found');
+    // }
 
-    return knex('thread')
-      .insert(pick(fields, create_fields))
+    const value = await knex('thread')
+      .insert({ ...pick(fields, create_fields), sections: JSON.stringify([]) })
       .returning(returning_fields)
       .then(pick_first);
+
+    return value;
   },
 
-  update(id: number, fields: Thread): Bluebird<Thread> {
+  update(id: number, fields: Partial<Thread>): Bluebird<Thread> {
     return knex('thread')
       .update(pick(fields, update_fields))
       .where({ id })

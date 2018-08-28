@@ -11,8 +11,8 @@ export const router = new Router();
 const pending_states: { [key: string]: string } = {};
 Reddit.on('state_expiration', (state: string) => delete pending_states[state]);
 
-export function sign(user: string): string {
-  return jwt.sign({ user }, config.jwt_secret);
+export function sign(user_id: number): string {
+  return jwt.sign({ user_id }, config.jwt_secret);
 }
 
 router.get('/oauth', ctx => {
@@ -41,21 +41,19 @@ router.get('/oauth/callback', async ctx => {
     reddit.prefs(),
   ]);
 
-  const { refresh_token } = reddit;
-
   // we have all the information necessary.
   // let's create a user in the database.
-  await User.create({
+  const user = await User.create({
     reddit_username,
     lang,
-    refresh_token: refresh_token!,
+    refresh_token: reddit.refresh_token!,
     is_global_admin: false,
     spacex__is_admin: false,
     spacex__is_mod: false,
     spacex__is_slack_member: false,
   });
 
-  const token = sign(reddit_username);
+  const token = sign(user.id);
   ctx.status = STATUS.SEE_ALSO;
   ctx.redirect(`${callback_url}?token=${token}`);
 });

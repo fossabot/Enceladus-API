@@ -6,7 +6,7 @@ export const config = Object.freeze({
   db: Object.freeze({
     host: process.env.DB__HOST,
     port: parseInt(process.env.DB__PORT || '5432', 10),
-    username: process.env.DB__USERNAME || '',
+    user: process.env.DB__USERNAME || '',
     password: process.env.DB__PASSWORD || '',
     database: process.env.DB__DATABASE || '',
   }),

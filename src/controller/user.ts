@@ -11,14 +11,16 @@ export async function get_all(ctx: BaseContext) {
 }
 
 export function get(ctx: BaseContext) {
-  return User.find(ctx.params.id)
+  return User
+    .find(ctx.params.id)
     .then(okay.bind(ctx))
     .catch(error.bind(ctx));
 }
 
 export function create(ctx: BaseContext) {
-  return User.create(ctx.request.body)
-    .then(user => ({ ...user, jwt: sign(user.reddit_username) }))
+  return User
+    .create(ctx.request.body)
+    .then(user => ({ ...user, jwt: sign(user.id) }))
     .then(created.bind(ctx))
     .catch(error.bind(ctx));
 }

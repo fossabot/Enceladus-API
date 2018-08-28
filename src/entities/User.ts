@@ -3,14 +3,14 @@ import pick from 'lodash/pick';
 import { knex } from '..';
 
 export interface User {
-  id?: number;
-  reddit_username?: string;
-  lang?: string;
-  refresh_token?: string;
-  is_global_admin?: boolean;
-  spacex__is_admin?: boolean;
-  spacex__is_mod?: boolean;
-  spacex__is_slack_member?: boolean;
+  id: number;
+  reddit_username: string;
+  lang: string;
+  refresh_token: string;
+  is_global_admin: boolean;
+  spacex__is_admin: boolean;
+  spacex__is_mod: boolean;
+  spacex__is_slack_member: boolean;
 }
 
 const fields_config = {
@@ -79,22 +79,23 @@ export default {
   find(id: number): Bluebird<User> {
     return knex('user')
       .where({ id })
+      .column(returning_fields)
       .limit(1)
       .then(pick_first);
   },
 
   find_all(): Bluebird<User[]> {
-    return knex('user').value();
+    return knex('user').columns(returning_fields) as any;
   },
 
-  create(fields: User): Bluebird<User> {
+  create(fields: Partial<User>): Bluebird<User> {
     return knex('user')
       .insert(pick(fields, create_fields))
       .returning(returning_fields)
       .then(pick_first);
   },
 
-  update(id: number, fields: User): Bluebird<User> {
+  update(id: number, fields: Partial<User>): Bluebird<User> {
     return knex('user')
       .update(pick(fields, update_fields))
       .where({ id })

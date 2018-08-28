@@ -23,12 +23,12 @@ export function create(ctx: BaseContext) {
 }
 
 export async function update(ctx: BaseContext) {
-  const thread = await Thread.find(ctx.params.id);
+  let thread = await Thread.find(ctx.params.id);
 
   await minimum_thread_host(ctx, thread);
 
   try {
-    Thread.update(thread.id, ctx.request.body);
+    thread = await Thread.update(thread.id, ctx.request.body);
     okay.call(ctx, thread);
   } catch (err) {
     error.call(ctx, err);

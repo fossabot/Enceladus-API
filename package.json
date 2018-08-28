@@ -32,7 +32,6 @@
     "pg": "^7.4.3",
     "reflect-metadata": "^0.1.12",
     "socket.io": "^2.1.1",
-    "typeorm": "^0.2.7",
     "winston": "^3.0.0"
   },
   "devDependencies": {
