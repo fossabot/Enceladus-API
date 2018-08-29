@@ -6,6 +6,7 @@ import { config } from './config';
 export const knex = Knex({
   client: 'pg',
   connection: config.db,
+  debug: true,
 });
 
 export async function create_tables() {

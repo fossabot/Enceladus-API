@@ -52,6 +52,13 @@ function pick_first(value: PresetEvent[]): PresetEvent {
 }
 
 export default {
+  exists(id: number): Bluebird<boolean> {
+    return knex('preset_event')
+      .where({ id })
+      .count()
+      .then(count => !!count);
+  },
+
   find(id: number): Bluebird<PresetEvent> {
     return knex('preset_event')
       .where({ id })

@@ -15,6 +15,10 @@ export function get(ctx: BaseContext) {
 }
 
 export function create(ctx: BaseContext) {
+  if (ctx.state.user_data!.id !== ctx.request.body.created_by) {
+    return ctx.throw(401, "Cannot create a thread using someone else's name!");
+  }
+
   return Thread.create(ctx.request.body)
     .then(created.bind(ctx))
     .catch(error.bind(ctx));

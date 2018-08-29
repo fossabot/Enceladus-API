@@ -1,8 +1,6 @@
 import Bluebird from 'bluebird';
-import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import { knex } from '..';
-// import Section from './Section';
 import User from './User';
 
 export interface Thread {
@@ -91,6 +89,13 @@ function pick_first(value: Thread[]): Thread {
 }
 
 export default {
+  exists(id: number): Bluebird<boolean> {
+    return knex('thread')
+      .where({ id })
+      .count()
+      .then(count => !!count);
+  },
+
   find(id: number): Bluebird<Thread> {
     return knex('thread')
       .where({ id })
@@ -102,13 +107,23 @@ export default {
     return knex('thread').columns(returning_fields) as any;
   },
 
-  async create(fields: Partial<Thread>): Promise<Thread> {
-    // if (fields.created_by === undefined || await User.find(fields.created_by) === undefined) {
-    //   throw new Error('User not found');
-    // }
+  // union with unknown indexable because TypeScript doesn't like partial types
+  async create(
+    fields: Partial<Thread> & { [key: string]: unknown },
+  ): Promise<Thread> {
+    const missing_fields = create_fields.filter(
+      field => fields[field] === undefined,
+    );
+    if (missing_fields.length !== 0) {
+      throw new Error(`Missing field(s): ${missing_fields.join(', ')}`);
+    }
+
+    if (!(await User.exists(fields.created_by!))) {
+      throw new Error('User not found');
+    }
 
     const value = await knex('thread')
-      .insert({ ...pick(fields, create_fields), sections: JSON.stringify([]) })
+      .insert({ ...pick(fields, create_fields), sections: '[]' })
       .returning(returning_fields)
       .then(pick_first);
 

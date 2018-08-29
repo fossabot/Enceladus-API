@@ -64,6 +64,13 @@ function pick_first(value: Section[]): Section {
 }
 
 export default {
+  exists(id: number): Bluebird<boolean> {
+    return knex('section')
+      .where({ id })
+      .count()
+      .then(count => !!count);
+  },
+
   find(id: number): Bluebird<Section> {
     return (
       knex('section')
