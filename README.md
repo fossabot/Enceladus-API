@@ -5,6 +5,7 @@
 ![License][license]
 ![Version][version]
 ![Build][build]
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fr-spacex%2FEnceladus-API.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fr-spacex%2FEnceladus-API?ref=badge_shield)
 
 ## Endpoints
 
@@ -81,3 +82,7 @@ at which point it will no longer be functional.
 [version]: https://img.shields.io/github/package-json/v/r-spacex/Enceladus-API.svg?style=flat-square
 [build]: https://img.shields.io/travis/r-spacex/Enceladus-API.svg?style=flat-square
 [docs]: https://r-spacex.github.io/Enceladus-API
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fr-spacex%2FEnceladus-API.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fr-spacex%2FEnceladus-API?ref=badge_large)
